@@ -7,24 +7,50 @@ use Sandhje\Spanner\Adapter\ArrayAdapter;
 class Config
 {
     private $regions = array();
-    private $path;
+    private $pathArray;
     private $environment;
     private $adapter;
     
-    public function __construct($path, $environment, AdapterInterface $adapter = null)
+    public function __construct(AdapterInterface $adapter = null)
     {
-        if(!is_dir($path)) {
-            throw new \Exception("Configuration initialized with invalid path");
-        }
-        
-        $this->path = $path;
-        $this->environment = $environment;
         $this->adapter = (!$adapter ? new ArrayAdapter() : $adapter);
     }
     
-    public function getPath()
+    public function appendPath($path)
     {
-        return $this->path;
+        if(!is_array($this->pathArray)) {
+            $this->pathArray = array();
+        }
+        
+        array_push($this->pathArray, $path);
+        return $this;
+    }
+    
+    public function prependPath($path)
+    {
+        if(!is_array($this->pathArray)) {
+            $this->pathArray = array();
+        }
+        
+        array_unshift($this->pathArray, $path);
+        return $this;
+    }
+    
+    public function setPathArray(array $pathArray)
+    {
+        $this->pathArray = $pathArray;
+        return $this;
+    }
+    
+    public function getPathArray()
+    {
+        return $this->pathArray;
+    }
+    
+    public function setEnvironment($environment)
+    {
+        $this->environment = $environment;
+        return $this;
     }
     
     public function getEnvironment()
@@ -70,6 +96,8 @@ class Config
         } else {
             $this->regions[$regionKey][$name] = $value;
         }
+        
+        return $this;
     }
     
     private function load($region)
