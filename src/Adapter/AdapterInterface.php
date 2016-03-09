@@ -14,6 +14,7 @@ interface AdapterInterface
      * 
      * @param Sandhje\Config\Config $config
      * @param string $region
+     * @return array
      */
     function load(Config $config, $region);
 }
