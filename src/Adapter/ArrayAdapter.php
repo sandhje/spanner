@@ -1,10 +1,11 @@
 <?php
 
-namespace Sandhje\Config\Adapter;
+namespace Sandhje\Spanner\Adapter;
 
-use Sandhje\Config\Config;
-use Sandhje\Config\Adapter\AdapterInterface;
-use Sandhje\Config\Adapter\BaseAdapter;
+use Sandhje\Spanner\Config;
+use Sandhje\Spanner\Adapter\AdapterInterface;
+use Sandhje\Spanner\Adapter\BaseAdapter;
+use Sandhje\Spanner\Filesystem\Filesystem;
 
 class ArrayAdapter extends BaseAdapter implements AdapterInterface
 {

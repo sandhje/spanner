@@ -1,8 +1,8 @@
 <?php
-namespace Sandhje\Config;
+namespace Sandhje\Spanner;
 
-use Sandhje\Config\Adapter\AdapterInterface;
-use Sandhje\Config\Adapter\ArrayAdapter;
+use Sandhje\Spanner\Adapter\AdapterInterface;
+use Sandhje\Spanner\Adapter\ArrayAdapter;
 
 class Config
 {

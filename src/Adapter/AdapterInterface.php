@@ -1,7 +1,7 @@
 <?php
-namespace Sandhje\Config\Adapter;
+namespace Sandhje\Spanner\Adapter;
 
-use Sandhje\Config\Config;
+use Sandhje\Spanner\Config;
 /**
  *
  * @author Sandhje
