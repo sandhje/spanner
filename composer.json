@@ -1,5 +1,8 @@
 {
   "name" : "Config-test",
+  "require" : {
+    "symfony/yaml" : "v3.0.3"
+  },
   "repositories" : [ {
     "type" : "composer",
     "url" : "https://packagist.org/"
