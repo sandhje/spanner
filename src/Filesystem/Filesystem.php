@@ -21,7 +21,14 @@ class Filesystem
     
     public function load($filename) 
     {
-        return (include $filename);
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        
+        if($ext === "php") {
+            return (include $filename);
+        } else {
+            return file_get_contents($filename);            
+        }
+        
     }
 }
 

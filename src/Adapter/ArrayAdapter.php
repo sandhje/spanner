@@ -9,7 +9,7 @@ use Sandhje\Spanner\Filesystem\Filesystem;
 
 class ArrayAdapter extends BaseAdapter implements AdapterInterface
 {
-    private $filesystem;
+    protected $filesystem;
     
     public function __construct(Filesystem $filesystem = null)
     {
@@ -22,7 +22,7 @@ class ArrayAdapter extends BaseAdapter implements AdapterInterface
      */
     public function load(Config $config, $region)
     {
-        $configurationFile = $region . '.php';
+        $configurationFile = $this->getFileName($region);
         
         $region = array();
         
@@ -47,9 +47,9 @@ class ArrayAdapter extends BaseAdapter implements AdapterInterface
      * Load the passed file and return its contents
      * 
      * @param string $file
-     * @return mi
+     * @return array
      */
-    private function loadFile($file) 
+    protected function loadFile($file) 
     {
         $config = array();
         
@@ -58,6 +58,11 @@ class ArrayAdapter extends BaseAdapter implements AdapterInterface
         }
         
         return $config;
+    }
+    
+    protected function getFileName($region)
+    {
+        return $region . ".php";
     }
 
 }
