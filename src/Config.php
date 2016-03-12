@@ -3,6 +3,8 @@ namespace Sandhje\Spanner;
 
 use Sandhje\Spanner\Adapter\AdapterInterface;
 use Sandhje\Spanner\Adapter\ArrayAdapter;
+use Sandhje\Spanner\Config\ConfigCollection;
+use Sandhje\Spanner\Config\ConfigItem;
 
 class Config
 {
@@ -23,6 +25,9 @@ class Config
         }
         
         array_push($this->pathArray, $path);
+        
+        $this->clearCache();
+        
         return $this;
     }
     
@@ -33,12 +38,18 @@ class Config
         }
         
         array_unshift($this->pathArray, $path);
+        
+        $this->clearCache();
+        
         return $this;
     }
     
     public function setPathArray(array $pathArray)
     {
         $this->pathArray = $pathArray;
+        
+        $this->clearCache();
+        
         return $this;
     }
     
@@ -50,6 +61,9 @@ class Config
     public function setEnvironment($environment)
     {
         $this->environment = $environment;
+        
+        $this->clearCache();
+        
         return $this;
     }
     
@@ -58,22 +72,24 @@ class Config
         return $this->environment;
     }
     
-    public function get($region, $name = false)
+    public function get($region, $name = null)
     {
-        if(!array_key_exists($region . "Config", $this->regions)) {
+        $regionKey = $region . "Config";
+        
+        if(!array_key_exists($regionKey, $this->regions)) {
             if(!$this->load($region))
-                throw new \Exception("Unable to load configuration region $region", 500);
+                throw new \Exception("Unable to load configuration region $region");
         }
     
         if(empty($name)) {
-            return $this->regions[$region . "Config"];
+            return $this->returnConfigElement($this->regions[$regionKey], $region);
         }
     
-        if(!array_key_exists($name, $this->regions[$region . "Config"])) {
-            throw new \Exception("Configuration key $name does not exist in region $region", 500);
+        if(!array_key_exists($name, $this->regions[$regionKey])) {
+            throw new \Exception("Configuration key $name does not exist in region $region");
         }
     
-        return $this->regions[$region . "Config"][$name];
+        return $this->returnConfigElement($this->regions[$regionKey][$name], $region, $name);
     }
     
     public function set($region, $name, $value)
@@ -98,6 +114,26 @@ class Config
         }
         
         return $this;
+    }
+    
+    private function returnConfigElement($element, $region, $name = null)
+    {
+        if(is_array($element)) {
+            return new ConfigCollection($region, $element);
+        }
+        
+        return new ConfigItem($region, $name, $element);
+    }
+    
+    private function clearCache($region = null)
+    {
+        if($region) {
+            if(array_key_exists($region, $this->regions)) {
+                unset($this->regions[$region]);
+            }
+        } else {
+            $this->regions = array();
+        }
     }
     
     private function load($region)

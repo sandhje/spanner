@@ -4,6 +4,7 @@ namespace Sandhje\Spanner\Test;
 
 use Sandhje\Spanner\Config;
 use Mockery;
+use Sandhje\Spanner\Config\ConfigCollection;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
@@ -70,6 +71,26 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($environment, $resultEnvironment);
     }
     
+    public function testClearCache()
+    {
+        // Arrange
+        
+        // Act
+        
+        // Assert
+        $this->assertTrue(false);
+    }
+    
+    public function testManualSetItemsRemainAfterClearingCache()
+    {
+        // Arrange
+        
+        // Act
+        
+        // Assert
+        $this->assertTrue(false);
+    }
+    
     public function testGet()
     {
         // Arrange
@@ -83,7 +104,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $result = $config->get($region);
     
         // Assert
-        $this->assertEquals($regionArray, $result);
+        $this->assertEquals(new ConfigCollection($region, $regionArray), $result);
     }
     
     public function testSet()
@@ -101,6 +122,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $result = $config->get($region);
     
         // Assert
-        $this->assertEquals($regionArray2, $result);
+        $this->assertEquals(new ConfigCollection($region, $regionArray2), $result);
     }
 }
