@@ -1,12 +1,14 @@
 <?php
 namespace Sandhje\Spanner\Config;
 
+use Sandhje\Spanner\Config\ConfigElementFactory;
+
 /**
  *
  * @author Sandhje
  *        
  */
-class ConfigIterator implements \Iterator
+class ConfigIterator extends ConfigElement implements \Iterator
 {
     /**
      * Iterator source
@@ -15,8 +17,10 @@ class ConfigIterator implements \Iterator
      */
     private $data;
 
-    public function __construct(array $data)
+    public function __construct($region, array $data)
     {
+        parent::__construct($region);
+        
         $this->data = $data;
     }
     
@@ -26,7 +30,8 @@ class ConfigIterator implements \Iterator
      */
     public function current()
     {
-        return current($this->data);
+        $factory = new ConfigElementFactory();
+        return $factory(current($this->data), $this->region, key($this->data));
     }
 
     /**

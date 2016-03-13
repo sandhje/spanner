@@ -1,6 +1,8 @@
 <?php
 namespace Sandhje\Spanner\Config;
 
+use Sandhje\Spanner\Config\ConfigElementFactory;
+
 /**
  *
  * @author Sandhje
@@ -28,7 +30,7 @@ class ConfigCollection extends ConfigElement implements \IteratorAggregate
      */
     public function getIterator()
     {
-        return new ConfigIterator($this->data);
+        return new ConfigIterator($this->region, $this->data);
     }
     
     /**
@@ -46,11 +48,8 @@ class ConfigCollection extends ConfigElement implements \IteratorAggregate
             return false;
         }
         
-        if(is_array($this->data[$key])) {
-            return new ConfigCollection($this->data[$key]);
-        }
-        
-        return new ConfigItem($key, $this->data[$key]);
+        $factory = new ConfigElementFactory();
+        return $factory($this->data[$key], $this->region, $key);
     }
     
     /**

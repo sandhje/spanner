@@ -3,8 +3,7 @@ namespace Sandhje\Spanner;
 
 use Sandhje\Spanner\Adapter\AdapterInterface;
 use Sandhje\Spanner\Adapter\ArrayAdapter;
-use Sandhje\Spanner\Config\ConfigCollection;
-use Sandhje\Spanner\Config\ConfigItem;
+use Sandhje\Spanner\Config\ConfigElementFactory;
 
 class Config
 {
@@ -81,15 +80,17 @@ class Config
                 throw new \Exception("Unable to load configuration region $region");
         }
     
+        $factory = new ConfigElementFactory();
+        
         if(empty($name)) {
-            return $this->returnConfigElement($this->regions[$regionKey], $region);
+            return $factory($this->regions[$regionKey], $region);
         }
     
         if(!array_key_exists($name, $this->regions[$regionKey])) {
             throw new \Exception("Configuration key $name does not exist in region $region");
         }
     
-        return $this->returnConfigElement($this->regions[$regionKey][$name], $region, $name);
+        return $factory($this->regions[$regionKey][$name], $region, $name);
     }
     
     public function set($region, $name, $value)
@@ -114,15 +115,6 @@ class Config
         }
         
         return $this;
-    }
-    
-    private function returnConfigElement($element, $region, $name = null)
-    {
-        if(is_array($element)) {
-            return new ConfigCollection($region, $element);
-        }
-        
-        return new ConfigItem($region, $name, $element);
     }
     
     private function clearCache($region = null)
