@@ -15,6 +15,13 @@ class Config
     private $regions = array();
     
     /**
+     * Storage for overrides for configuration settings
+     * 
+     * @var array
+     */
+    private $regionOverrides = array();
+    
+    /**
      * Paths to load config files from
      * 
      * @var array
@@ -155,24 +162,28 @@ class Config
      */
     public function get($region, $name = null)
     {
-        $regionKey = $region . "Config";
+        $regionKey = $this->getRegionKey($region);
         
         if(!array_key_exists($regionKey, $this->regions)) {
-            if(!$this->load($region))
+            if(!$this->load($region)) {
                 throw new \Exception("Unable to load configuration region $region");
+            }
         }
     
+        $data = $this->regions[$regionKey];
+        $data = $this->applyOverrides($region, $data);
+        
         $factory = new ConfigElementFactory();
         
         if(empty($name)) {
-            return $factory($this->regions[$regionKey], $region);
+            return $factory($data, $region);
         }
     
-        if(!array_key_exists($name, $this->regions[$regionKey])) {
+        if(!array_key_exists($name, $data)) {
             throw new \Exception("Configuration key $name does not exist in region $region");
         }
     
-        return $factory($this->regions[$regionKey][$name], $region, $name);
+        return $factory($data[$name], $region, $name);
     }
     
     /**
@@ -184,27 +195,46 @@ class Config
      * @return \Sandhje\Spanner\Config
      */
     public function set($region, $name, $value)
-    {        
-        // Load from config files if this is not done yet
-        $this->get($region, $name);
+    {
+        $override = array($name => $value);
+        $regionKey = $this->getRegionKey($region); 
         
-        $regionKey = $region . "Config";
-        
-        if(!array_key_exists($regionKey, $this->regions)) {
-            $this->regions[$regionKey] = array();
+        if(!array_key_exists($regionKey, $this->regionOverrides)) {
+            $this->regionOverrides[$regionKey] = [];
         }
         
-        if(!array_key_exists($name, $this->regions[$regionKey])) {
-            $this->regions[$regionKey][$name] = "";
-        }
-        
-        if(is_array($this->regions[$regionKey][$name]) && is_array($value)) {
-            $this->regions[$regionKey][$name] = array_replace_recursive($this->regions[$regionKey][$name], $value);
-        } else {
-            $this->regions[$regionKey][$name] = $value;
-        }
+        $this->regionOverrides[$regionKey] = array_replace_recursive($this->regionOverrides[$regionKey], $override);
         
         return $this;
+    }
+    
+    /**
+     * Get the region array key
+     * 
+     * @param string $region
+     * @return string
+     */
+    private function getRegionKey($region)
+    {
+        return $region . "Config";
+    }
+    
+    /**
+     * Apply overrides to the configuration data
+     * 
+     * @param string $region
+     * @param array $data
+     * @return array
+     */
+    private function applyOverrides($region, $data)
+    {
+        $regionKey = $this->getRegionKey($region);
+        
+        if(!array_key_exists($regionKey, $this->regionOverrides)) {
+            return $data;
+        }
+        
+        return array_replace_recursive($data, $this->regionOverrides[$regionKey]);
     }
     
     /**
@@ -215,8 +245,10 @@ class Config
     private function clearCache($region = null)
     {
         if($region) {
-            if(array_key_exists($region, $this->regions)) {
-                unset($this->regions[$region]);
+            $regionKey = $this->getRegionKey($region);
+            
+            if(array_key_exists($regionKey, $this->regions)) {
+                unset($this->regions[$regionKey]);
             }
         } else {
             $this->regions = array();

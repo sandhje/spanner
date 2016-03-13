@@ -71,26 +71,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($environment, $resultEnvironment);
     }
     
-    public function testClearCache()
-    {
-        // Arrange
-        
-        // Act
-        
-        // Assert
-        $this->assertTrue(false);
-    }
-    
-    public function testManualSetItemsRemainAfterClearingCache()
-    {
-        // Arrange
-        
-        // Act
-        
-        // Assert
-        $this->assertTrue(false);
-    }
-    
     public function testGet()
     {
         // Arrange
@@ -124,4 +104,24 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         // Assert
         $this->assertEquals(new ConfigCollection($region, $regionArray2), $result);
     }
+    
+    public function testManualSetItemsRemainAfterClearingCache()
+    {
+        // Arrange
+        $region = "acme";
+        $regionArray = array("foo" => "bar");
+        $regionArray2 = array("foo" => "lorem");
+        $arrayAdapter = Mockery::mock('Sandhje\Spanner\Adapter\ArrayAdapter');
+        $arrayAdapter->shouldReceive("load")->with(Mockery::type('Sandhje\Spanner\Config'),$region)->andReturn($regionArray);
+        $config = new Config($arrayAdapter);
+        
+        // Act
+        $config->set($region, key($regionArray2), current($regionArray2)); 
+        $config->appendPath("test/");
+        $result = $config->get($region);
+        
+        // Assert
+        $this->assertEquals(new ConfigCollection($region, $regionArray2), $result);
+    }
+    
 }
