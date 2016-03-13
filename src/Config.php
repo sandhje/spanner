@@ -7,9 +7,32 @@ use Sandhje\Spanner\Config\ConfigElementFactory;
 
 class Config
 {
+    /**
+     * Configuration cache
+     * 
+     * @var array
+     */
     private $regions = array();
+    
+    /**
+     * Paths to load config files from
+     * 
+     * @var array
+     */
     private $pathArray;
+    
+    /**
+     * The environment
+     * 
+     * @var string
+     */
     private $environment;
+    
+    /**
+     * Configuration adapter
+     * 
+     * @var AdapterInterface
+     */
     private $adapter;
     
     public function __construct(AdapterInterface $adapter = null)
@@ -17,8 +40,19 @@ class Config
         $this->adapter = (!$adapter ? new ArrayAdapter() : $adapter);
     }
     
+    /**
+     * Append a path to the configuration path array
+     * 
+     * @param string $path
+     * @throws \InvalidArgumentException
+     * @return \Sandhje\Spanner\Config
+     */
     public function appendPath($path)
     {
+        if(!is_string($path)) {
+            throw new \InvalidArgumentException("Path has to be a string");
+        }
+        
         if(!is_array($this->pathArray)) {
             $this->pathArray = array();
         }
@@ -30,8 +64,19 @@ class Config
         return $this;
     }
     
+    /**
+     * Prepend a path to the configuration path array
+     * 
+     * @param string $path
+     * @throws \InvalidArgumentException
+     * @return \Sandhje\Spanner\Config
+     */
     public function prependPath($path)
     {
+        if(!is_string($path)) {
+            throw new \InvalidArgumentException("Path has to be a string");
+        }
+        
         if(!is_array($this->pathArray)) {
             $this->pathArray = array();
         }
@@ -43,6 +88,12 @@ class Config
         return $this;
     }
     
+    /**
+     * Set the configuration path array
+     * 
+     * @param array $pathArray
+     * @return \Sandhje\Spanner\Config
+     */
     public function setPathArray(array $pathArray)
     {
         $this->pathArray = $pathArray;
@@ -52,13 +103,31 @@ class Config
         return $this;
     }
     
+    /**
+     * Get a copy of the path array
+     * 
+     * @return array
+     */
     public function getPathArray()
     {
-        return $this->pathArray;
+        $pathArray = $this->pathArray;
+        
+        return $pathArray;
     }
     
+    /**
+     * Set the configuration environment
+     * 
+     * @param string $environment
+     * @throws \InvalidArgumentException
+     * @return \Sandhje\Spanner\Config
+     */
     public function setEnvironment($environment)
     {
+        if(!is_string($environment)) {
+            throw new \InvalidArgumentException("Environment has to be a string");
+        }
+        
         $this->environment = $environment;
         
         $this->clearCache();
@@ -66,11 +135,24 @@ class Config
         return $this;
     }
     
+    /**
+     * Get the configuration environment
+     * 
+     * @return string
+     */
     public function getEnvironment()
     {
         return $this->environment;
     }
     
+    /**
+     * Get a collection or item from the configuration
+     * 
+     * @param string $region
+     * @param string $name
+     * @throws \Exception
+     * @return \Sandhje\Spanner\Config\ConfigCollection|\Sandhje\Spanner\Config\ConfigItem
+     */
     public function get($region, $name = null)
     {
         $regionKey = $region . "Config";
@@ -93,6 +175,14 @@ class Config
         return $factory($this->regions[$regionKey][$name], $region, $name);
     }
     
+    /**
+     * Set a value for a configuration element
+     * 
+     * @param string $region
+     * @param string $name
+     * @param mixed $value
+     * @return \Sandhje\Spanner\Config
+     */
     public function set($region, $name, $value)
     {        
         // Load from config files if this is not done yet
@@ -117,6 +207,11 @@ class Config
         return $this;
     }
     
+    /**
+     * Clear the configuration cache
+     * 
+     * @param string $region
+     */
     private function clearCache($region = null)
     {
         if($region) {
@@ -128,6 +223,12 @@ class Config
         }
     }
     
+    /**
+     * Load a configuration region into the configuration cache
+     * 
+     * @param string $region
+     * @return boolean
+     */
     private function load($region)
     {
         $regionKey = $region . "Config";

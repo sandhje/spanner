@@ -8,7 +8,11 @@ namespace Sandhje\Spanner\Adapter;
  */
 class BaseAdapter
 {
-    
+    /**
+     * Merge the passed array's recursively
+     * 
+     * @return array
+     */
     protected function mergeConfig()
     {
         $result = array();
