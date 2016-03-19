@@ -10,6 +10,13 @@ namespace Sandhje\Spanner\Filesystem;
 class Filesystem
 {
     /**
+     * Equals PATHINFO_DIRNAME | PATHINFO_BASENAME | PATHINFO_EXTENSION | PATHINFO_FILENAME
+     * 
+     * @var int
+     */
+    const PATHINFO_ALL = 15;
+    
+    /**
      * is_file wrapper
      * 
      * @param string $filename
@@ -47,7 +54,7 @@ class Filesystem
      * @param int $options
      * @return mixed
      */
-    public function pathinfo($path, $options = PATHINFO_DIRNAME | PATHINFO_BASENAME | PATHINFO_EXTENSION | PATHINFO_FILENAME)
+    public function pathinfo($path, $options = self::PATHINFO_ALL)
     {
         return pathinfo($path, $options);
     }
