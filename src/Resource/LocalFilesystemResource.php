@@ -46,9 +46,9 @@ class LocalFilesystemResource implements FilesystemResourceInterface
         if ($resourceStrategy) {
             $this->strategy = $resourceStrategy;
         } else if ($this->filesystem->is_file($resource)) {    
-            $this->strategy = new LocalFilesystemFileStrategy($filesystem);
+            $this->strategy = new LocalFilesystemFileStrategy($this->filesystem);
         } else {
-            $this->strategy = new LocalFilesystemDirectoryStrategy($filesystem);
+            $this->strategy = new LocalFilesystemDirectoryStrategy($this->filesystem);
         }
     }
 

@@ -5,56 +5,74 @@ namespace Sandhje\Spanner\Test;
 use Sandhje\Spanner\Config;
 use Mockery;
 use Sandhje\Spanner\Config\ConfigCollection;
+use Sandhje\Spanner\Test\Mock\MockFactory;
+use Sandhje\Spanner\Resource\ResourceCollection;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
+    private $mockFactory;
+    
+    public function setUp()
+    {
+        $this->mockFactory = new MockFactory();
+    }
+    
     public function tearDown()
     {
         Mockery::close();
     }
     
-    public function testSetGetPathArray()
+    public function testSetGetResourceArray()
     {
         // Arrange
-        $pathArray = array("foo/", "bar/");
-        $config = new Config();
+        $resourceArray = array (
+            $this->mockFactory->getMockLocalFilesystemDirResource("foo/"),
+            $this->mockFactory->getMockLocalFilesystemDirResource("bar/")
+        );
     
         // Act
-        $config->setPathArray($pathArray);
-        $resultPathArray = $config->getPathArray();
+        $config = new Config();
+        $config->setResourceArray($resourceArray);
+        $resultResourceArray = $config->getResourceCollection();
     
         // Assert
-        $this->assertEquals($pathArray, $resultPathArray);
+        $this->assertEquals(new ResourceCollection($resourceArray), $resultResourceArray);
     }
     
-    public function testAppendPath()
+    public function testAppendResource()
     {
         // Arrange
-        $pathArray = array("foo/", "bar/");
+        $resourceArray = array (
+            $this->mockFactory->getMockLocalFilesystemDirResource("foo/"),
+            $this->mockFactory->getMockLocalFilesystemDirResource("bar/")
+        );
         $config = new Config();
         
         // Act
-        $config->appendPath($pathArray[0]);
-        $config->appendPath($pathArray[1]);
-        $resultPathArray = $config->getPathArray();
+        $config->appendResource($resourceArray[0]);
+        $config->appendResource($resourceArray[1]);
+        $resultResourceCollection = $config->getResourceCollection();
         
         // Assert
-        $this->assertEquals($pathArray, $resultPathArray);
+        $this->assertEquals(new ResourceCollection($resourceArray), $resultResourceCollection);
     }
     
-    public function testPrependPath()
+    public function testPrependResource()
     {
         // Arrange
-        $pathArray = array("foo/", "bar/");
+        $resourceArray = array (
+            $this->mockFactory->getMockLocalFilesystemDirResource("foo/"),
+            $this->mockFactory->getMockLocalFilesystemDirResource("bar/")
+        );
         $config = new Config();
     
         // Act
-        $config->prependPath($pathArray[1]);
-        $config->prependPath($pathArray[0]);
-        $resultPathArray = $config->getPathArray();
+        $config->prependResource($resourceArray[1]);
+        $config->prependResource($resourceArray[0]);
+        $resultResourceCollection = $config->getResourceCollection();
     
         // Assert
-        $this->assertEquals($pathArray, $resultPathArray);
+        $this->assertEquals(new ResourceCollection($resourceArray), $resultResourceCollection);
     }
     
     public function testSetGetEnvironment()
@@ -113,15 +131,15 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $regionArray2 = array("foo" => "lorem");
         $arrayAdapter = Mockery::mock('Sandhje\Spanner\Adapter\ArrayAdapter');
         $arrayAdapter->shouldReceive("load")->with(Mockery::type('Sandhje\Spanner\Config'),$region)->andReturn($regionArray);
-        $config = new Config($arrayAdapter);
+        $resource = $this->mockFactory->getMockLocalFilesystemDirResource("test/");
         
         // Act
+        $config = new Config($arrayAdapter);
         $config->set($region, key($regionArray2), current($regionArray2)); 
-        $config->appendPath("test/");
+        $config->appendResource($resource);
         $result = $config->get($region);
         
         // Assert
         $this->assertEquals(new ConfigCollection($region, $regionArray2), $result);
     }
-    
 }

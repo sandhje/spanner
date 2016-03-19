@@ -24,7 +24,7 @@ class LocalFilesystemBaseStrategy
         
         $argList = func_get_args();
         for ($i = 0; $i < func_num_args(); $i++) {
-            $result = rtrim($result, "/") . "/" . ltrim($argList[$i], "/");
+            $result = ($i == 0) ? $argList[$i] : rtrim($result, "/") . "/" . ltrim($argList[$i], "/");
         }
         
         return $result;
