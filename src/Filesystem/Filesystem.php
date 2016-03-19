@@ -20,6 +20,16 @@ class Filesystem
     }
     
     /**
+     * is_dir wrapper
+     *
+     * @param string $dir
+     */
+    public function is_dir($directory)
+    {
+        return is_dir($directory);
+    }
+    
+    /**
      * is_readable wrapper
      * 
      * @param string $filename
@@ -28,6 +38,18 @@ class Filesystem
     public function is_readable($filename) 
     {
         return is_readable($filename);
+    }
+    
+    /**
+     * pathinfo wrapper
+     *
+     * @param string $path
+     * @param int $options
+     * @return mixed
+     */
+    public function pathinfo($path, $options = PATHINFO_DIRNAME | PATHINFO_BASENAME | PATHINFO_EXTENSION | PATHINFO_FILENAME)
+    {
+        return pathinfo($path, $options);
     }
     
     /**

@@ -5,17 +5,10 @@ namespace Sandhje\Spanner\Adapter;
 use Sandhje\Spanner\Config;
 use Sandhje\Spanner\Adapter\AdapterInterface;
 use Sandhje\Spanner\Adapter\BaseAdapter;
-use Sandhje\Spanner\Filesystem\Filesystem;
+use Sandhje\Spanner\Resource\ResourceInterface;
 
 class ArrayAdapter extends BaseAdapter implements AdapterInterface
 {
-    protected $filesystem;
-    
-    public function __construct(Filesystem $filesystem = null)
-    {
-        $this->filesystem = (!$filesystem ? new Filesystem() : $filesystem);
-    }
-    
     /**
      * {@inheritDoc}
      * @see \Sandhje\Config\Adapter\ConfigAdapterInterface::load()
@@ -26,38 +19,34 @@ class ArrayAdapter extends BaseAdapter implements AdapterInterface
         
         $region = array();
         
-        if(is_array($config->getPathArray())) {
-            foreach($config->getPathArray() as $path) {
-                $partial = $this->loadFile($path . '/' . $configurationFile);
-                
-                if(!empty($config->getEnvironment())) {
-                    $partial = $this->mergeConfig($partial, $this->loadFile($path. '/' . $config->getEnvironment() . '/' . $configurationFile));
-                }
-                
-                if(!empty($partial)) {
-                    $region = $this->mergeConfig($region, $partial);
-                }
+        $resources = $config->getResourceCollection();
+        
+        foreach($resources->getIterator() as $resource) {
+            $partial = $this->loadFile($resource, $configurationFile);
+            
+            if(!empty($config->getEnvironment())) {
+                $partial = $this->mergeConfig($partial, $this->loadFile($resource, $configurationFile, $config->getEnvironment()));
             }
-        }        
+            
+            if(!empty($partial)) {
+                $region = $this->mergeConfig($region, $partial);
+            }
+        }
         
         return $region;
     }
     
     /**
-     * Load the passed file and return its contents
+     * Load the passed file from the resource
      * 
+     * @param ResourceInterface $resource
      * @param string $file
+     * @param string $environment
      * @return array
      */
-    protected function loadFile($file) 
+    protected function loadFile(ResourceInterface $resource, $file, $environment = false) 
     {
-        $config = array();
-        
-        if($this->filesystem->is_file($file) && $this->filesystem->is_readable($file)) {
-            $config = $this->filesystem->load($file);
-        }
-        
-        return $config;
+        return $resource->load($file, $environment);
     }
     
     protected function getFileName($region)

@@ -6,9 +6,17 @@ use Sandhje\Spanner\Config;
 use Sandhje\Spanner\Adapter\YamlAdapter;
 use Mockery;
 use Symfony\Component\Yaml\Yaml;
+use Sandhje\Spanner\Test\Mock\MockFactory;
 
 class YmlAdapterTest extends \PHPUnit_Framework_TestCase
 {
+    private $mockFactory;
+    
+    public function setUp()
+    {
+        $this->mockFactory = new MockFactory();
+    }
+    
     public function tearDown()
     {
         Mockery::close();
@@ -19,17 +27,15 @@ class YmlAdapterTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $path = "/foo";
         $region = "bar";
-        $file = $path . "/" . $region . ".yml";
+        $file = $region . ".yml";
         $testConfig = Yaml::dump(array("a" => "b"));
-        $config = new Config();
-        $config->appendPath($path);
-        $filesystem = Mockery::mock('Sandhje\Spanner\Filesystem\Filesystem');
-        $filesystem->shouldReceive('is_file')->with($file)->andReturn(true);
-        $filesystem->shouldReceive('is_readable')->with($file)->andReturn(true);
-        $filesystem->shouldReceive('load')->with($file)->andReturn($testConfig);
+        $resource = $this->mockFactory->getMockLocalFilesystemDirResource($path);
+        $resource->shouldReceive('load')->with($file, false)->andReturn($testConfig);
         
         // Act
-        $yamlAdapter = new YamlAdapter($filesystem);
+        $config = new Config();
+        $config->appendResource($resource);
+        $yamlAdapter = new YamlAdapter();
         $result = $yamlAdapter->load($config, $region);
         
         // Assert
@@ -42,24 +48,18 @@ class YmlAdapterTest extends \PHPUnit_Framework_TestCase
         $path = "/foo";
         $region = "bar";
         $env = "test";
-        $envPath = $path . "/" . $env;
-        $file = $path . "/" . $region . ".yml";
-        $envFile = $envPath . "/" . $region . ".yml";
+        $file = $region . ".yml";
         $testConfig = Yaml::dump(array("a" => "b"));
         $testEnvConfig = Yaml::dump(array("c" => "d"));
-        $config = new Config();
-        $config->appendPath($path);
-        $config->setEnvironment($env);
-        $filesystem = Mockery::mock('Sandhje\Spanner\Filesystem\Filesystem');
-        $filesystem->shouldReceive('is_file')->with($file)->andReturn(true);
-        $filesystem->shouldReceive('is_readable')->with($file)->andReturn(true);
-        $filesystem->shouldReceive('load')->with($file)->andReturn($testConfig);
-        $filesystem->shouldReceive('is_file')->with($envFile)->andReturn(true);
-        $filesystem->shouldReceive('is_readable')->with($envFile)->andReturn(true);
-        $filesystem->shouldReceive('load')->with($envFile)->andReturn($testEnvConfig);
+        $resource = $this->mockFactory->getMockLocalFilesystemDirResource($path);
+        $resource->shouldReceive('load')->with($file, false)->andReturn($testConfig);
+        $resource->shouldReceive('load')->with($file, $env)->andReturn($testEnvConfig);
         
         // Act
-        $yamlAdapter = new YamlAdapter($filesystem);
+        $config = new Config();
+        $config->appendResource($resource);
+        $config->setEnvironment($env);
+        $yamlAdapter = new YamlAdapter();
         $result = $yamlAdapter->load($config, $region);
         
         // Assert
@@ -72,23 +72,19 @@ class YmlAdapterTest extends \PHPUnit_Framework_TestCase
         $path1 = "/foo";
         $path2 = "/bar";
         $region = "acme";
-        $file1 = $path1 . "/" . $region . ".yml";
-        $file2 = $path2 . "/" . $region . ".yml";
+        $file = $region . ".yml";
         $array1 = Yaml::dump(array("a" => "lorem", "b" => "ipsum"));
         $array2 = Yaml::dump(array("b" => "dolor", "c" => "sit amet"));
-        $config = new Config();
-        $config->appendPath($path1);
-        $config->appendPath($path2);
-        $filesystem = Mockery::mock('Sandhje\Spanner\Filesystem\Filesystem');
-        $filesystem->shouldReceive('is_file')->with($file1)->andReturn(true);
-        $filesystem->shouldReceive('is_readable')->with($file1)->andReturn(true);
-        $filesystem->shouldReceive('load')->with($file1)->andReturn($array1);
-        $filesystem->shouldReceive('is_file')->with($file2)->andReturn(true);
-        $filesystem->shouldReceive('is_readable')->with($file2)->andReturn(true);
-        $filesystem->shouldReceive('load')->with($file2)->andReturn($array2);
+        $resource1 = $this->mockFactory->getMockLocalFilesystemDirResource($path1);
+        $resource1->shouldReceive('load')->with($file, false)->andReturn($array1);
+        $resource2 = $this->mockFactory->getMockLocalFilesystemDirResource($path2);
+        $resource2->shouldReceive('load')->with($file, false)->andReturn($array2);
     
         // Act
-        $yamlAdapter = new YamlAdapter($filesystem);
+        $config = new Config();
+        $config->appendResource($resource1);
+        $config->appendResource($resource2);
+        $yamlAdapter = new YamlAdapter();
         $result = $yamlAdapter->load($config, $region);
     
         // Assert
@@ -101,23 +97,19 @@ class YmlAdapterTest extends \PHPUnit_Framework_TestCase
         $path1 = "/foo";
         $path2 = "/bar";
         $region = "acme";
-        $file1 = $path1 . "/" . $region . ".yml";
-        $file2 = $path2 . "/" . $region . ".yml";
+        $file = $region . ".yml";
         $array1 = Yaml::dump(array("a" => array("b" => "lorem", "c" => "ipsum")));
         $array2 = Yaml::dump(array("a" => array("c" => "dolor", "d" => "sit amet")));
-        $config = new Config();
-        $config->appendPath($path1);
-        $config->appendPath($path2);
-        $filesystem = Mockery::mock('Sandhje\Spanner\Filesystem\Filesystem');
-        $filesystem->shouldReceive('is_file')->with($file1)->andReturn(true);
-        $filesystem->shouldReceive('is_readable')->with($file1)->andReturn(true);
-        $filesystem->shouldReceive('load')->with($file1)->andReturn($array1);
-        $filesystem->shouldReceive('is_file')->with($file2)->andReturn(true);
-        $filesystem->shouldReceive('is_readable')->with($file2)->andReturn(true);
-        $filesystem->shouldReceive('load')->with($file2)->andReturn($array2);
+        $resource1 = $this->mockFactory->getMockLocalFilesystemDirResource($path1);
+        $resource1->shouldReceive('load')->with($file, false)->andReturn($array1);
+        $resource2 = $this->mockFactory->getMockLocalFilesystemDirResource($path2);
+        $resource2->shouldReceive('load')->with($file, false)->andReturn($array2);
     
         // Act
-        $yamlAdapter = new YamlAdapter($filesystem);
+        $config = new Config();
+        $config->appendResource($resource1);
+        $config->appendResource($resource2);
+        $yamlAdapter = new YamlAdapter();
         $result = $yamlAdapter->load($config, $region);
     
         // Assert

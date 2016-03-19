@@ -4,24 +4,21 @@ namespace Sandhje\Spanner\Adapter;
 
 use Sandhje\Spanner\Config;
 use Sandhje\Spanner\Adapter\ArrayAdapter;
-use Sandhje\Spanner\Filesystem\Filesystem;
+use Sandhje\Spanner\Resource\ResourceInterface;
 
 class XmlAdapter extends ArrayAdapter
 {
-    public function __construct(Filesystem $filesystem = null)
-    {
-        parent::__construct($filesystem);
-    }
-    
     /**
      * Load the passed file and return its contents
      * 
+     * @param ResourceInterface $resource
      * @param string $file
+     * @param string $environment
      * @return array
      */
-    protected function loadFile($file) 
+    protected function loadFile(ResourceInterface $resource, $file, $environment = false) 
     {
-        $config = parent::loadFile($file);
+        $config = parent::loadFile($resource, $file, $environment);
         
         libxml_use_internal_errors(true);
         

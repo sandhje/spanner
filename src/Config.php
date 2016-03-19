@@ -4,6 +4,8 @@ namespace Sandhje\Spanner;
 use Sandhje\Spanner\Adapter\AdapterInterface;
 use Sandhje\Spanner\Adapter\ArrayAdapter;
 use Sandhje\Spanner\Config\ConfigElementFactory;
+use Sandhje\Spanner\Resource\LocalFilesystemResource;
+use Sandhje\Spanner\Resource\ResourceCollection;
 
 class Config
 {
@@ -22,11 +24,11 @@ class Config
     private $regionOverrides = array();
     
     /**
-     * Paths to load config files from
+     * Configuration resources
      * 
      * @var array
      */
-    private $pathArray;
+    private $resources = array();
     
     /**
      * The environment
@@ -48,23 +50,17 @@ class Config
     }
     
     /**
-     * Append a path to the configuration path array
+     * Append a resource to the configuration resources array
      * 
-     * @param string $path
+     * @param string|ResourceInterface $resource
      * @throws \InvalidArgumentException
      * @return \Sandhje\Spanner\Config
      */
-    public function appendPath($path)
+    public function appendResource($resource)
     {
-        if(!is_string($path)) {
-            throw new \InvalidArgumentException("Path has to be a string");
-        }
+        $resource = $this->prepResource($resource);
         
-        if(!is_array($this->pathArray)) {
-            $this->pathArray = array();
-        }
-        
-        array_push($this->pathArray, $path);
+        $this->resources[] = $resource;
         
         $this->clearCache();
         
@@ -72,23 +68,17 @@ class Config
     }
     
     /**
-     * Prepend a path to the configuration path array
+     * Prepend a resource to the configuration resources array
      * 
-     * @param string $path
+     * @param string|ResourceInterface $resource
      * @throws \InvalidArgumentException
      * @return \Sandhje\Spanner\Config
      */
-    public function prependPath($path)
+    public function prependResource($resource)
     {
-        if(!is_string($path)) {
-            throw new \InvalidArgumentException("Path has to be a string");
-        }
+        $resource = $this->prepResource($resource);
         
-        if(!is_array($this->pathArray)) {
-            $this->pathArray = array();
-        }
-        
-        array_unshift($this->pathArray, $path);
+        array_unshift($this->resources, $resource);
         
         $this->clearCache();
         
@@ -96,14 +86,21 @@ class Config
     }
     
     /**
-     * Set the configuration path array
+     * Set the configuration resources array
      * 
-     * @param array $pathArray
+     * @param array $resourceArray
+     * @throws \InvalidArgumentException
      * @return \Sandhje\Spanner\Config
      */
-    public function setPathArray(array $pathArray)
+    public function setResourceArray(array $resourceArray)
     {
-        $this->pathArray = $pathArray;
+        $resources = array();
+        
+        foreach($resourceArray as $resource) {
+            $resources[] = $this->prepResource($resource);
+        }
+        
+        $this->resources = $resources;
         
         $this->clearCache();
         
@@ -111,15 +108,13 @@ class Config
     }
     
     /**
-     * Get a copy of the path array
+     * Get the resource collection
      * 
-     * @return array
+     * @return Sandhje\Spanner\Resource\ResourceCollection
      */
-    public function getPathArray()
+    public function getResourceCollection()
     {
-        $pathArray = $this->pathArray;
-        
-        return $pathArray;
+        return new ResourceCollection($this->resources);
     }
     
     /**
@@ -206,6 +201,27 @@ class Config
         $this->regionOverrides[$regionKey] = array_replace_recursive($this->regionOverrides[$regionKey], $override);
         
         return $this;
+    }
+    
+    /**
+     * Prepare and validate a resource for insertion into the resources property
+     * 
+     * @param string|\Sandhje\Spanner\Resource\LocalFilesystemResource $resource
+     * @throws \InvalidArgumentException
+     * @return \Sandhje\Spanner\Resource\LocalFilesystemResource
+     */
+    private function prepResource($resource)
+    {
+        if(is_string($resource)) {
+            $resource = new LocalFilesystemResource($resource);
+        }
+        
+        if(!is_object($resource) || !is_subclass_of($resource, 'Sandhje\Spanner\Resource\ResourceInterface'))
+        {
+            throw new \InvalidArgumentException("Invalid resource could not be appended to the resources array");
+        }
+        
+        return $resource;
     }
     
     /**
