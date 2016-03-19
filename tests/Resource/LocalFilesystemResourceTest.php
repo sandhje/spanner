@@ -30,7 +30,7 @@ class LocalFilesystemResourceTest extends \PHPUnit_Framework_TestCase
         
         // Act
         $localFilesystemResource = new LocalFilesystemResource($resource, $resourceStrategy, $filesystem);
-        $result = $localFilesystemResource->loadFile($file, $environment);
+        $result = $localFilesystemResource->load($file, $environment);
         
         // Assert
         $this->assertEquals($fileContent, $result);

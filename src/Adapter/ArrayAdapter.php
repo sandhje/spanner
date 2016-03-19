@@ -5,7 +5,7 @@ namespace Sandhje\Spanner\Adapter;
 use Sandhje\Spanner\Config;
 use Sandhje\Spanner\Adapter\AdapterInterface;
 use Sandhje\Spanner\Adapter\BaseAdapter;
-use Sandhje\Spanner\Resource\FilesystemResourceInterface;
+use Sandhje\Spanner\Resource\ResourceInterface;
 
 class ArrayAdapter extends BaseAdapter implements AdapterInterface
 {
@@ -39,14 +39,14 @@ class ArrayAdapter extends BaseAdapter implements AdapterInterface
     /**
      * Load the passed file from the resource
      * 
-     * @param FilesystemResourceInterface $resource
+     * @param ResourceInterface $resource
      * @param string $file
      * @param string $environment
      * @return array
      */
-    protected function loadFile(FilesystemResourceInterface $resource, $file, $environment = false) 
+    protected function loadFile(ResourceInterface $resource, $file, $environment = false) 
     {
-        return $resource->loadFile($file, $environment);
+        return $resource->load($file, $environment);
     }
     
     protected function getFileName($region)

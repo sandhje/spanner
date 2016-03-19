@@ -4,19 +4,19 @@ namespace Sandhje\Spanner\Adapter;
 
 use Sandhje\Spanner\Config;
 use Sandhje\Spanner\Adapter\ArrayAdapter;
-use Sandhje\Spanner\Resource\FilesystemResourceInterface;
+use Sandhje\Spanner\Resource\ResourceInterface;
 
 class IniAdapter extends ArrayAdapter
 {
     /**
      * Load the passed file and return its contents
      * 
-     * @param Sandhje\Spanner\Resource\FilesystemResourceInterface $resource
+     * @param ResourceInterface $resource
      * @param string $file
      * @param string $environment
      * @return array
      */
-    protected function loadFile(FilesystemResourceInterface $resource, $file, $environment = false) 
+    protected function loadFile(ResourceInterface $resource, $file, $environment = false) 
     {
         $config = parent::loadFile($resource, $file, $environment);
         

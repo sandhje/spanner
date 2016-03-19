@@ -29,7 +29,7 @@ class IniAdapterTest extends \PHPUnit_Framework_TestCase
         $file = $region . ".ini";
         $testConfig = 'a=b';
         $resource = $this->mockFactory->getMockLocalFilesystemDirResource($path);
-        $resource->shouldReceive('loadFile')->with($file, false)->andReturn($testConfig);
+        $resource->shouldReceive('load')->with($file, false)->andReturn($testConfig);
         
         // Act
         $config = new Config();
@@ -51,8 +51,8 @@ class IniAdapterTest extends \PHPUnit_Framework_TestCase
         $testConfig = 'a=b';
         $testEnvConfig = 'c=d';
         $resource = $this->mockFactory->getMockLocalFilesystemDirResource($path);
-        $resource->shouldReceive('loadFile')->with($file, false)->andReturn($testConfig);
-        $resource->shouldReceive('loadFile')->with($file, $env)->andReturn($testEnvConfig);
+        $resource->shouldReceive('load')->with($file, false)->andReturn($testConfig);
+        $resource->shouldReceive('load')->with($file, $env)->andReturn($testEnvConfig);
         
         // Act
         $config = new Config();
@@ -81,9 +81,9 @@ class IniAdapterTest extends \PHPUnit_Framework_TestCase
             c=sit amet
         ';
         $resource1 = $this->mockFactory->getMockLocalFilesystemDirResource($path1);
-        $resource1->shouldReceive('loadFile')->with($file, false)->andReturn($array1);
+        $resource1->shouldReceive('load')->with($file, false)->andReturn($array1);
         $resource2 = $this->mockFactory->getMockLocalFilesystemDirResource($path2);
-        $resource2->shouldReceive('loadFile')->with($file, false)->andReturn($array2);
+        $resource2->shouldReceive('load')->with($file, false)->andReturn($array2);
     
         // Act
         $config = new Config();
@@ -114,9 +114,9 @@ c=dolor
 d=sit amet
         '; 
         $resource1 = $this->mockFactory->getMockLocalFilesystemDirResource($path1);
-        $resource1->shouldReceive('loadFile')->with($file, false)->andReturn($array1);
+        $resource1->shouldReceive('load')->with($file, false)->andReturn($array1);
         $resource2 = $this->mockFactory->getMockLocalFilesystemDirResource($path2);
-        $resource2->shouldReceive('loadFile')->with($file, false)->andReturn($array2);
+        $resource2->shouldReceive('load')->with($file, false)->andReturn($array2);
     
         // Act
         $config = new Config();

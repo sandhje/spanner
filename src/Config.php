@@ -52,7 +52,7 @@ class Config
     /**
      * Append a resource to the configuration resources array
      * 
-     * @param string|Sandhje\Spanner\Resource\FilesystemResourceInterface $resource
+     * @param string|ResourceInterface $resource
      * @throws \InvalidArgumentException
      * @return \Sandhje\Spanner\Config
      */
@@ -70,7 +70,7 @@ class Config
     /**
      * Prepend a resource to the configuration resources array
      * 
-     * @param string|Sandhje\Spanner\Resource\FilesystemResourceInterface $resource
+     * @param string|ResourceInterface $resource
      * @throws \InvalidArgumentException
      * @return \Sandhje\Spanner\Config
      */
@@ -216,7 +216,7 @@ class Config
             $resource = new LocalFilesystemResource($resource);
         }
         
-        if(!is_object($resource) || !is_subclass_of($resource, 'Sandhje\Spanner\Resource\FilesystemResourceInterface'))
+        if(!is_object($resource) || !is_subclass_of($resource, 'Sandhje\Spanner\Resource\ResourceInterface'))
         {
             throw new \InvalidArgumentException("Invalid resource could not be appended to the resources array");
         }

@@ -29,7 +29,7 @@ class ArrayAdapterTest extends \PHPUnit_Framework_TestCase
         $file = $region . ".php";
         $testConfig = array("a" => "b");
         $resource = $this->mockFactory->getMockLocalFilesystemDirResource($path);
-        $resource->shouldReceive('loadFile')->with($file, false)->andReturn($testConfig);
+        $resource->shouldReceive('load')->with($file, false)->andReturn($testConfig);
         
         // Act
         $config = new Config();
@@ -51,8 +51,8 @@ class ArrayAdapterTest extends \PHPUnit_Framework_TestCase
         $testConfig = array("a" => "b");
         $testEnvConfig = array("c" => "d");
         $resource = $this->mockFactory->getMockLocalFilesystemDirResource($path);
-        $resource->shouldReceive('loadFile')->with($file, false)->andReturn($testConfig);
-        $resource->shouldReceive('loadFile')->with($file, $env)->andReturn($testEnvConfig);
+        $resource->shouldReceive('load')->with($file, false)->andReturn($testConfig);
+        $resource->shouldReceive('load')->with($file, $env)->andReturn($testEnvConfig);
         
         // Act
         $config = new Config();
@@ -77,9 +77,9 @@ class ArrayAdapterTest extends \PHPUnit_Framework_TestCase
         $array2 = array("b" => "dolor", "c" => "sit amet");
         $expected = array("a" => "lorem", "b" => "dolor", "c" => "sit amet");
         $resource1 = $this->mockFactory->getMockLocalFilesystemDirResource($path1);
-        $resource1->shouldReceive('loadFile')->with($file, false)->andReturn($array1);
+        $resource1->shouldReceive('load')->with($file, false)->andReturn($array1);
         $resource2 = $this->mockFactory->getMockLocalFilesystemDirResource($path2);
-        $resource2->shouldReceive('loadFile')->with($file, false)->andReturn($array2);
+        $resource2->shouldReceive('load')->with($file, false)->andReturn($array2);
     
         // Act
         $config = new Config();
@@ -103,9 +103,9 @@ class ArrayAdapterTest extends \PHPUnit_Framework_TestCase
         $array2 = array("a" => array("c" => "dolor", "d" => "sit amet"));
         $expected = array("a" => array("b" => "lorem", "c" => "dolor", "d" => "sit amet"));
         $resource1 = $this->mockFactory->getMockLocalFilesystemDirResource($path1);
-        $resource1->shouldReceive('loadFile')->with($file, false)->andReturn($array1);
+        $resource1->shouldReceive('load')->with($file, false)->andReturn($array1);
         $resource2 = $this->mockFactory->getMockLocalFilesystemDirResource($path2);
-        $resource2->shouldReceive('loadFile')->with($file, false)->andReturn($array2);
+        $resource2->shouldReceive('load')->with($file, false)->andReturn($array2);
     
         // Act
         $config = new Config();

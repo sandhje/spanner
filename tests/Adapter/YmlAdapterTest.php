@@ -30,7 +30,7 @@ class YmlAdapterTest extends \PHPUnit_Framework_TestCase
         $file = $region . ".yml";
         $testConfig = Yaml::dump(array("a" => "b"));
         $resource = $this->mockFactory->getMockLocalFilesystemDirResource($path);
-        $resource->shouldReceive('loadFile')->with($file, false)->andReturn($testConfig);
+        $resource->shouldReceive('load')->with($file, false)->andReturn($testConfig);
         
         // Act
         $config = new Config();
@@ -52,8 +52,8 @@ class YmlAdapterTest extends \PHPUnit_Framework_TestCase
         $testConfig = Yaml::dump(array("a" => "b"));
         $testEnvConfig = Yaml::dump(array("c" => "d"));
         $resource = $this->mockFactory->getMockLocalFilesystemDirResource($path);
-        $resource->shouldReceive('loadFile')->with($file, false)->andReturn($testConfig);
-        $resource->shouldReceive('loadFile')->with($file, $env)->andReturn($testEnvConfig);
+        $resource->shouldReceive('load')->with($file, false)->andReturn($testConfig);
+        $resource->shouldReceive('load')->with($file, $env)->andReturn($testEnvConfig);
         
         // Act
         $config = new Config();
@@ -76,9 +76,9 @@ class YmlAdapterTest extends \PHPUnit_Framework_TestCase
         $array1 = Yaml::dump(array("a" => "lorem", "b" => "ipsum"));
         $array2 = Yaml::dump(array("b" => "dolor", "c" => "sit amet"));
         $resource1 = $this->mockFactory->getMockLocalFilesystemDirResource($path1);
-        $resource1->shouldReceive('loadFile')->with($file, false)->andReturn($array1);
+        $resource1->shouldReceive('load')->with($file, false)->andReturn($array1);
         $resource2 = $this->mockFactory->getMockLocalFilesystemDirResource($path2);
-        $resource2->shouldReceive('loadFile')->with($file, false)->andReturn($array2);
+        $resource2->shouldReceive('load')->with($file, false)->andReturn($array2);
     
         // Act
         $config = new Config();
@@ -101,9 +101,9 @@ class YmlAdapterTest extends \PHPUnit_Framework_TestCase
         $array1 = Yaml::dump(array("a" => array("b" => "lorem", "c" => "ipsum")));
         $array2 = Yaml::dump(array("a" => array("c" => "dolor", "d" => "sit amet")));
         $resource1 = $this->mockFactory->getMockLocalFilesystemDirResource($path1);
-        $resource1->shouldReceive('loadFile')->with($file, false)->andReturn($array1);
+        $resource1->shouldReceive('load')->with($file, false)->andReturn($array1);
         $resource2 = $this->mockFactory->getMockLocalFilesystemDirResource($path2);
-        $resource2->shouldReceive('loadFile')->with($file, false)->andReturn($array2);
+        $resource2->shouldReceive('load')->with($file, false)->andReturn($array2);
     
         // Act
         $config = new Config();

@@ -10,7 +10,7 @@ use Sandhje\Spanner\Resource\Strategy\LocalFilesystemDirectoryStrategy;
  * @author Sandhje
  *        
  */
-class LocalFilesystemResource implements FilesystemResourceInterface
+class LocalFilesystemResource implements ResourceInterface
 {
     /**
      * Filesystem path or file
@@ -54,11 +54,11 @@ class LocalFilesystemResource implements FilesystemResourceInterface
 
     /**
      * {@inheritDoc}
-     * @see \Sandhje\Spanner\Resource\ResourceInterface::loadFile()
+     * @see \Sandhje\Spanner\Resource\ResourceInterface::load()
      */
-    public function loadFile($file, $environment = false)
+    public function load($item, $environment = false)
     {
-        return $this->strategy->loadFile($this->resource, $file, $environment);
+        return $this->strategy->loadFile($this->resource, $item, $environment);
     }
 
 }
