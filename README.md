@@ -6,15 +6,17 @@ A framework agnostic configuration package.
 
 1) Add composer to your project, see https://getcomposer.org/
 
-2) Add this github repository to the repositories element in your composer.json (Note: once stable this package will be published on packagist and this step will no longer be necessary)
+2) Add this github repository to the repositories element in your composer.json and add the dev stability flag (Note: once stable this package will be published on packagist and this step will no longer be necessary)
 
 ```
+"minimum-stability" : "dev",
+"prefer-stable": true,
 "repositories" : [ {
     "type" : "composer",
     "url" : "https://packagist.org/"
 }, {
+    "type": "vcs"
     "url": "https://github.com/sandhje/spanner.git",
-    "type": "git"
 } ]
 ```
 
@@ -46,7 +48,10 @@ Given the configuration data is inside the folder "/path/to/config" and consists
 1) Setup the configuration class:
 
 ```
-$config = new Sandhje\Spanner\Config(new YamlAdapter());
+use Sandhje\Spanner\Config;
+use Sandhje\Spanner\Adapter\YamlAdapter;
+
+$config = new Config(new YamlAdapter());
 $config->appendResource('/path/to/config')->setEnvironment("local");
 ```
 
@@ -60,7 +65,7 @@ This returns the data in "database.yml" and if available "local/database.yml".
 
 ### Resources
 
-A resource can be anything that holds configuration data, like the local filesystem, a database, a remote filesystem, etc. Resources are environment aware, this means that when a load operation is called on the resource and an environment is passed, the resource will search in the environment location and then in the default location. Currently Spanner comes with one type of resource: LocalFilesystemResource.
+A resource can be anything that holds configuration data, like the local filesystem, a database, a remote filesystem, etc. Resources are environment aware, this means that when a load operation is called on the resource and an environment is setup in the Config class, the resource will search in the environment location and then in the default location. Currently Spanner comes with one type of resource: LocalFilesystemResource.
 
 #### Usage
 
@@ -96,7 +101,7 @@ The default resource is LocalFilesystemResource but an instance of any custom re
 
 #### LocalFilesystemResource
 
-The local filesystem resource serves stuff that is on your local filesystem to the adapter. Upon construction of the LocalFilesystemResource object a path to the resource location has to be passed, this can be either a file or a directory. If the LocalFilesystemResource is passed a directory the resource's load operation will look for the requested file in ./{environment}/{file}.{ext} and if not found in ./{file}.{ext} If the LocalFilesystemResource is passed a file the resource's load operation will look for {file}.{environment}.{ext} and if not found {file}.{ext}. The extension depends on the used adapter.
+The local filesystem resource serves stuff that is on your local filesystem to the adapter. Upon construction of the LocalFilesystemResource object a path to the resource location has to be passed, this can be either a file or a directory. If the LocalFilesystemResource is passed a directory the resource's load operation will look for the requested file in ./{environment}/{file}.{ext} and if not found in ./{file}.{ext}. If the LocalFilesystemResource is passed a file the resource's load operation will look for ./{file}.{environment}.{ext} and if not found ./{file}.{ext}. The file extension depends on the adapter used.
 
 #### Creating your own resource
 
@@ -104,7 +109,7 @@ If the inner workings of LocalFilesystemResource do not suit your needs you can 
 
 ### Adapters
 
-The adapter is responsible for calling the load function on the resource with the correct arguments. When Config::get is called (and it's result is not cached) internally this call is forwarded to the adapter that has been set upon construction of the config class. The adapter will than call the load operation on each resource in the config class, optionally with an environment parameter if it was set in the config class. The adapter translates the result from the resource's load operation to a multidimensional associative array. Spanner ships with the following adapters:
+The adapter is responsible for calling the load function on the resource with the correct arguments. When Config::get is called (and it's result is not cached) internally this call is forwarded to the adapter that has been set upon construction of the config class. The adapter will then call the load operation on each resource in the config class, optionally with an environment parameter if it was set in the config class. The adapter translates the result from the resource's load operation to a multidimensional associative array. Spanner ships with the following adapters:
 
 * ArrayAdapter
 * IniAdapter
@@ -203,8 +208,12 @@ You can easily create your own adapter by either extending one of the existing a
 
 ## TODO
 
+- Allow setting up multiple adapters (refactor adapter - resource structure)
+- Add multidimensional environments, e.g. nl/local or en/local
 - Add database adapter/resource
 - Add docblock comment adapter/resource
-- Add custom exception classes
+- More thorough exception handling
+- Complete docementation
+- Setup sensiolabs insights analyses
 - Add to packagist
 - Finish this list ;)
