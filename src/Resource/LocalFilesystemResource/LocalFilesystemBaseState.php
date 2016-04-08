@@ -1,16 +1,22 @@
 <?php
-namespace Sandhje\Spanner\Resource\Strategy;
+namespace Sandhje\Spanner\Resource\LocalFilesystemResource;
 
+use Sandhje\Spanner\Filesystem\Filesystem;
 /**
  *
  * @author Sandhje
  *        
  */
-class LocalFilesystemBaseStrategy
+abstract class LocalFilesystemBaseState
 {
-    private function __construct()
+    /**
+     * @var Filesystem
+     */
+    protected $filesystem;
+    
+    public function __construct(Filesystem $filesystem)
     {
-        throw new \RuntimeException("Direct instantiation of LocalFilesystemBaseStrategy not allowed");
+        $this->filesystem = $filesystem;
     }
     
     /**

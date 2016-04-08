@@ -1,15 +1,15 @@
 <?php
-namespace Sandhje\Spanner\Test\Resource\Strategy;
+namespace Sandhje\Spanner\Test\Resource\LocalFilesystemResource;
 
 use Mockery;
-use Sandhje\Spanner\Resource\Strategy\LocalFilesystemDirectoryStrategy;
+use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemDirectoryState;
 
 /**
  *
  * @author Sandhje
  *        
  */
-class LocalFilesystemDirectoryStrategyTest extends \PHPUnit_Framework_TestCase
+class LocalFilesystemDirectoryStateTest extends \PHPUnit_Framework_TestCase
 {
     public function tearDown()
     {
@@ -29,8 +29,8 @@ class LocalFilesystemDirectoryStrategyTest extends \PHPUnit_Framework_TestCase
         $filesystem->shouldReceive('load')->with($resourceFile)->andReturn($fileContent);
         
         // Act
-        $fileStrategy = new LocalFilesystemDirectoryStrategy($filesystem);
-        $result = $fileStrategy->loadFile($resource, $file);
+        $dirState = new LocalFilesystemDirectoryState($filesystem);
+        $result = $dirState->loadFile($resource, $file);
         
         // Assert
         $this->assertEquals($fileContent, $result);
@@ -50,8 +50,8 @@ class LocalFilesystemDirectoryStrategyTest extends \PHPUnit_Framework_TestCase
         $filesystem->shouldReceive('load')->with($environmentResource)->andReturn($fileContent);
         
         // Act
-        $fileStrategy = new LocalFilesystemDirectoryStrategy($filesystem);
-        $result = $fileStrategy->loadFile($resource, $file, $environment);
+        $dirState = new LocalFilesystemDirectoryState($filesystem);
+        $result = $dirState->loadFile($resource, $file, $environment);
         
         // Assert
         $this->assertEquals($fileContent, $result);
@@ -69,8 +69,8 @@ class LocalFilesystemDirectoryStrategyTest extends \PHPUnit_Framework_TestCase
         $filesystem->shouldNotReceive('load');
         
         // Act
-        $fileStrategy = new LocalFilesystemDirectoryStrategy($filesystem);
-        $result = $fileStrategy->loadFile($resource, $file);
+        $dirState = new LocalFilesystemDirectoryState($filesystem);
+        $result = $dirState->loadFile($resource, $file);
         
         // Assert
         $this->assertFalse($result);

@@ -1,12 +1,12 @@
 <?php
-namespace Sandhje\Spanner\Resource\Strategy;
+namespace Sandhje\Spanner\Resource\LocalFilesystemResource;
 
 /**
  *
  * @author Sandhje
  *        
  */
-interface LocalFilesystemStrategyInterface
+interface LocalFilesystemStateInterface
 {
     /**
      * Load a file from the filesystem resource

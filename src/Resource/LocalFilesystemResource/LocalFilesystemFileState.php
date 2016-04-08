@@ -1,31 +1,17 @@
 <?php
-namespace Sandhje\Spanner\Resource\Strategy;
-
-use Sandhje\Spanner\Filesystem\Filesystem;
+namespace Sandhje\Spanner\Resource\LocalFilesystemResource;
 
 /**
  *
  * @author Sandhje
  *        
  */
-class LocalFilesystemFileStrategy extends LocalFilesystemBaseStrategy implements LocalFilesystemStrategyInterface
+class LocalFilesystemFileState extends LocalFilesystemBaseState implements LocalFilesystemStateInterface
 {
-    /**
-     * Filesystem wrapper class
-     * 
-     * @var Filesystem
-     */
-    protected $filesystem;
-    
-    public function __construct(Filesystem $filesystem = null)
-    {
-        $this->filesystem = (!$filesystem ? new Filesystem() : $filesystem);
-    }
-    
     /**
      * (non-PHPdoc)
      *
-     * @see \Sandhje\Spanner\Resource\Strategy\LocalFilesystemStrategyInterface::loadFile()
+     * @see \Sandhje\Spanner\Resource\Strategy\LocalFilesystemStateInterface::loadFile()
      *
      */
     public function loadFile($resource, $file, $environment = false)

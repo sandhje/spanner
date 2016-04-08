@@ -1,15 +1,15 @@
 <?php
-namespace Sandhje\Spanner\Test\Resource\Strategy;
+namespace Sandhje\Spanner\Test\Resource\LocalFilesystemResource;
 
 use Mockery;
-use Sandhje\Spanner\Resource\Strategy\LocalFilesystemFileStrategy;
+use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemFileState;
 
 /**
  *
  * @author Sandhje
  *        
  */
-class LocalFilesystemFileStrategyTest extends \PHPUnit_Framework_TestCase
+class LocalFilesystemFileStateTest extends \PHPUnit_Framework_TestCase
 {
     public function tearDown()
     {
@@ -35,8 +35,8 @@ class LocalFilesystemFileStrategyTest extends \PHPUnit_Framework_TestCase
         $filesystem->shouldReceive('load')->with($resource)->andReturn($fileContent);
         
         // Act
-        $fileStrategy = new LocalFilesystemFileStrategy($filesystem);
-        $result = $fileStrategy->loadFile($resource, $file);
+        $fileState = new LocalFilesystemFileState($filesystem);
+        $result = $fileState->loadFile($resource, $file);
         
         // Assert
         $this->assertEquals($fileContent, $result);
@@ -63,8 +63,8 @@ class LocalFilesystemFileStrategyTest extends \PHPUnit_Framework_TestCase
         $filesystem->shouldReceive('load')->with($environmentResource)->andReturn($fileContent);
         
         // Act
-        $fileStrategy = new LocalFilesystemFileStrategy($filesystem);
-        $result = $fileStrategy->loadFile($resource, $file, $environment);
+        $fileState = new LocalFilesystemFileState($filesystem);
+        $result = $fileState->loadFile($resource, $file, $environment);
         
         // Assert
         $this->assertEquals($fileContent, $result);
@@ -88,8 +88,8 @@ class LocalFilesystemFileStrategyTest extends \PHPUnit_Framework_TestCase
         $filesystem->shouldNotReceive('load');
         
         // Act
-        $fileStrategy = new LocalFilesystemFileStrategy($filesystem);
-        $result = $fileStrategy->loadFile($resource, $file);
+        $fileState = new LocalFilesystemFileState($filesystem);
+        $result = $fileState->loadFile($resource, $file);
         
         // Assert
         $this->assertFalse($result);
