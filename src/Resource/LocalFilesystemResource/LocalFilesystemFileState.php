@@ -18,7 +18,7 @@ class LocalFilesystemFileState extends LocalFilesystemBaseState implements Local
     {
         $loadResult = false;
         
-        $resourcePathInfo = $this->filesystem->pathinfo($resource);
+        $resourcePathInfo = $this->filesystemProxy->pathinfo($resource);
         
         if($file != $resourcePathInfo["basename"]) {
             return false;

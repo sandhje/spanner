@@ -1,13 +1,13 @@
 <?php
-namespace Sandhje\Spanner\Filesystem;
+namespace Sandhje\Spanner\Proxy;
 
 /**
- * Filesystem wrapper
+ * Filesystem proxy
  *
  * @author Sandhje
  *        
  */
-class Filesystem
+class FilesystemProxy
 {
     /**
      * Equals PATHINFO_DIRNAME | PATHINFO_BASENAME | PATHINFO_EXTENSION | PATHINFO_FILENAME

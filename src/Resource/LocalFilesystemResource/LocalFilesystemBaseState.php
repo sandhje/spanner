@@ -1,7 +1,7 @@
 <?php
 namespace Sandhje\Spanner\Resource\LocalFilesystemResource;
 
-use Sandhje\Spanner\Filesystem\Filesystem;
+use Sandhje\Spanner\Proxy\FilesystemProxy;
 /**
  *
  * @author Sandhje
@@ -10,13 +10,13 @@ use Sandhje\Spanner\Filesystem\Filesystem;
 abstract class LocalFilesystemBaseState
 {
     /**
-     * @var Filesystem
+     * @var FilesystemProxy
      */
-    protected $filesystem;
+    protected $filesystemProxy;
     
-    public function __construct(Filesystem $filesystem)
+    public function __construct(FilesystemProxy $filesystemProxy)
     {
-        $this->filesystem = $filesystem;
+        $this->filesystemProxy = $filesystemProxy;
     }
     
     /**
@@ -43,8 +43,8 @@ abstract class LocalFilesystemBaseState
      */
     protected function load($location)
     {
-        if($this->filesystem->is_file($location) && $this->filesystem->is_readable($location)) {
-            return $this->filesystem->load($location);
+        if($this->filesystemProxy->is_file($location) && $this->filesystemProxy->is_readable($location)) {
+            return $this->filesystemProxy->load($location);
         }
     
         return false;

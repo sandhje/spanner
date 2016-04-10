@@ -1,7 +1,7 @@
 <?php
 namespace Sandhje\Spanner\Resource;
 
-use Sandhje\Spanner\Filesystem\Filesystem;
+use Sandhje\Spanner\Proxy\FilesystemProxy;
 use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemStateInterface;
 use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemFileState;
 use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemDirectoryState;
@@ -28,11 +28,11 @@ class LocalFilesystemResource implements ResourceInterface
     private $state;
     
     /**
-     * Filesystem wrapper class
+     * Filesystem proxy class
      *
-     * @var Filesystem
+     * @var FilesystemProxy
      */
-    private $filesystem;
+    private $filesystemProxy;
 
     public function __construct($resource)
     {
@@ -40,47 +40,55 @@ class LocalFilesystemResource implements ResourceInterface
     }
 
     /**
-     * @param \Sandhje\Spanner\Resource\LocalFilesystemResource\StateInterface $state
+     * LocalFilesystemStateInterface $fileState
      */
-    public function setState(LocalFilesystemStateInterface $state = null)
+    public function setFileState(LocalFilesystemStateInterface $fileState = null)
     {
-        $this->state = $state;
+        $this->state = $fileState ?: new LocalFilesystemFileState($this->getFilesystemProxy());
+    }
+    
+    /**
+     * LocalFilesystemStateInterface $directoryState
+     */
+    public function setDirectoryState(LocalFilesystemDirectoryState $directoryState = null)
+    {
+        $this->state = $directoryState ?: new LocalFilesystemDirectoryState($this->getFilesystemProxy());
     }
     
     /**
      * @return \Sandhje\Spanner\Resource\LocalFilesystemResource\StateInterface
      */
-    private function getState()
+    public function getState()
     {
         if(!$this->state) {
-            if ($this->getFilesystem()->is_file($this->resource)) {
-                $this->setState(new LocalFilesystemFileState($this->getFilesystem()));
+            if ($this->getFilesystemProxy()->is_file($this->resource)) {
+                $this->setFileState();
             } else {
-                $this->setState(new LocalFilesystemDirectoryState($this->getFilesystem()));
+                $this->setDirectoryState();
             }
         }
         
         return $this->state;
     }
-
+    
     /**
-     * @param \Sandhje\Spanner\Filesystem\Filesystem $filesystem
+     * @param \Sandhje\Spanner\Proxy\FilesystemProxy $filesystemProxy
      */
-    public function setFilesystem(Filesystem $filesystem = null)
+    public function setFilesystemProxy(FilesystemProxy $filesystemProxy = null)
     {
-        $this->filesystem = $filesystem;
+        $this->filesystemProxy = $filesystemProxy ?: new FilesystemProxy();
     }
     
     /**
-     * @return \Sandhje\Spanner\Filesystem\Filesystem
+     * @return \Sandhje\Spanner\Proxy\FilesystemProxy
      */
-    private function getFilesystem()
+    public function getFilesystemProxy()
     {
-        if(!$this->filesystem) {
-            $this->setFilesystem(new Filesystem());
+        if(!$this->filesystemProxy) {
+            $this->setFilesystemProxy();
         }
         
-        return $this->filesystem;
+        return $this->filesystemProxy;
     }
     
     /**
@@ -97,7 +105,7 @@ class LocalFilesystemResource implements ResourceInterface
      */
     private function getResource()
     {
-        if(!$this->resource || !$this->getFilesystem()->is_readable($this->resource)) {
+        if(!$this->resource || !$this->getFilesystemProxy()->is_readable($this->resource)) {
             throw new \Exception("Invalid resource");
         }
         

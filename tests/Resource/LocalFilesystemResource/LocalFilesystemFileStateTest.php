@@ -28,14 +28,14 @@ class LocalFilesystemFileStateTest extends \PHPUnit_Framework_TestCase
         );
         $file = 'bar.php';
         $fileContent = array("a" => "b");
-        $filesystem = Mockery::mock('Sandhje\Spanner\Filesystem\Filesystem');
-        $filesystem->shouldReceive('pathinfo')->with($resource)->andReturn($resourcePathInfo);
-        $filesystem->shouldReceive('is_file')->with($resource)->andReturn(true);
-        $filesystem->shouldReceive('is_readable')->with($resource)->andReturn(true);
-        $filesystem->shouldReceive('load')->with($resource)->andReturn($fileContent);
+        $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');
+        $filesystemProxy->shouldReceive('pathinfo')->with($resource)->andReturn($resourcePathInfo);
+        $filesystemProxy->shouldReceive('is_file')->with($resource)->andReturn(true);
+        $filesystemProxy->shouldReceive('is_readable')->with($resource)->andReturn(true);
+        $filesystemProxy->shouldReceive('load')->with($resource)->andReturn($fileContent);
         
         // Act
-        $fileState = new LocalFilesystemFileState($filesystem);
+        $fileState = new LocalFilesystemFileState($filesystemProxy);
         $result = $fileState->loadFile($resource, $file);
         
         // Assert
@@ -56,14 +56,14 @@ class LocalFilesystemFileStateTest extends \PHPUnit_Framework_TestCase
         $fileContent = array("a" => "b");
         $environment = "acme";
         $environmentResource = "/foo/bar.acme.php";
-        $filesystem = Mockery::mock('Sandhje\Spanner\Filesystem\Filesystem');
-        $filesystem->shouldReceive('pathinfo')->with($resource)->andReturn($resourcePathInfo);
-        $filesystem->shouldReceive('is_file')->with($environmentResource)->andReturn(true);
-        $filesystem->shouldReceive('is_readable')->with($environmentResource)->andReturn(true);
-        $filesystem->shouldReceive('load')->with($environmentResource)->andReturn($fileContent);
+        $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');
+        $filesystemProxy->shouldReceive('pathinfo')->with($resource)->andReturn($resourcePathInfo);
+        $filesystemProxy->shouldReceive('is_file')->with($environmentResource)->andReturn(true);
+        $filesystemProxy->shouldReceive('is_readable')->with($environmentResource)->andReturn(true);
+        $filesystemProxy->shouldReceive('load')->with($environmentResource)->andReturn($fileContent);
         
         // Act
-        $fileState = new LocalFilesystemFileState($filesystem);
+        $fileState = new LocalFilesystemFileState($filesystemProxy);
         $result = $fileState->loadFile($resource, $file, $environment);
         
         // Assert
@@ -81,14 +81,14 @@ class LocalFilesystemFileStateTest extends \PHPUnit_Framework_TestCase
             'filename' => 'bar'
         );
         $file = 'foo.php';
-        $filesystem = Mockery::mock('Sandhje\Spanner\Filesystem\Filesystem');
-        $filesystem->shouldReceive('pathinfo')->with($resource)->andReturn($resourcePathInfo);
-        $filesystem->shouldNotReceive('is_file');
-        $filesystem->shouldNotReceive('is_readable');
-        $filesystem->shouldNotReceive('load');
+        $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');
+        $filesystemProxy->shouldReceive('pathinfo')->with($resource)->andReturn($resourcePathInfo);
+        $filesystemProxy->shouldNotReceive('is_file');
+        $filesystemProxy->shouldNotReceive('is_readable');
+        $filesystemProxy->shouldNotReceive('load');
         
         // Act
-        $fileState = new LocalFilesystemFileState($filesystem);
+        $fileState = new LocalFilesystemFileState($filesystemProxy);
         $result = $fileState->loadFile($resource, $file);
         
         // Assert
