@@ -5,6 +5,8 @@ use Sandhje\Spanner\Proxy\FilesystemProxy;
 use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemStateInterface;
 use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemFileState;
 use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemDirectoryState;
+use Sandhje\Spanner\Resource\Strategy\ResourceStrategyInterface;
+use Sandhje\Spanner\Resource\Strategy\FilesystemResourceStrategyInterface;
 
 /**
  *
@@ -21,6 +23,13 @@ class LocalFilesystemResource implements ResourceInterface
     private $resource;
     
     /**
+     * Resource strategy
+     * 
+     * @var FilesystemResourceStrategyInterface
+     */
+    private $strategy;
+    
+    /**
      * Filesystem resource state
      * 
      * @var LocalFilesystemStateInterface
@@ -34,9 +43,30 @@ class LocalFilesystemResource implements ResourceInterface
      */
     private $filesystemProxy;
 
-    public function __construct($resource)
+    public function __construct($resource, ResourceStrategyInterface $strategy)
     {
         $this->setResource($resource);
+        
+        if(!($strategy instanceof FilesystemResourceStrategyInterface))
+            throw new \InvalidArgumentException('Argument 2 passed to LocalFilesystemResource::__construct() must implement FilesystemResourceStrategyInterface');
+        
+        $this->setStrategy($strategy);
+    }
+
+    /**
+     * @return the $strategy
+     */
+    private function getStrategy()
+    {
+        return $this->strategy;
+    }
+
+    /**
+     * @param \Sandhje\Spanner\Resource\Strategy\FilesystemResourceStrategyInterface $strategy
+     */
+    private function setStrategy(FilesystemResourceStrategyInterface $strategy)
+    {
+        $this->strategy = $strategy;
     }
 
     /**
@@ -118,9 +148,25 @@ class LocalFilesystemResource implements ResourceInterface
      */
     public function load($item, $environment = false)
     {
-        return $this->getState()->loadFile($this->getResource(), $item, $environment);
-    }
+        $content = $this->getState()->loadFile(
+            $this->getResource(), 
+            $this->getStrategy()->getFilename($item), 
+            $environment
+        );
 
+        return $this->strategy->translate($content);
+    }
+    
+    /**
+     * {@inheritDoc}
+     * @see \Sandhje\Spanner\Resource\ResourceInterface::tryLoad()
+     */
+    public function tryLoad(&$result, $item, $environment = false)
+    {
+        $result = $this->load($item, $environment);
+        
+        return (is_array($result) && count($result));
+    }
 }
 
 ?>

@@ -1,11 +1,10 @@
 <?php
 namespace Sandhje\Spanner;
 
-use Sandhje\Spanner\Adapter\AdapterInterface;
-use Sandhje\Spanner\Adapter\ArrayAdapter;
 use Sandhje\Spanner\Config\ConfigElementFactory;
-use Sandhje\Spanner\Resource\LocalFilesystemResource;
-use Sandhje\Spanner\Resource\ResourceCollection;
+use Sandhje\Spanner\Resource\ResourceInterface;
+use Sandhje\Spanner\Resource\ResourceMediator;
+use Sandhje\Spanner\Resource\ResourceMediatorInterface;
 
 class Config
 {
@@ -24,11 +23,11 @@ class Config
     private $regionOverrides = array();
     
     /**
-     * Configuration resources
+     * ResourceMediator
      * 
-     * @var array
+     * @var ResoureMediatorInterface
      */
-    private $resources = array();
+    private $resourceMediator;
     
     /**
      * The environment
@@ -37,84 +36,48 @@ class Config
      */
     private $environment;
     
-    /**
-     * Configuration adapter
-     * 
-     * @var AdapterInterface
-     */
-    private $adapter;
+    public function __construct()
+    {}
     
-    public function __construct(AdapterInterface $adapter = null)
+    public function setResourceMediator(ResourceMediatorInterface $mediator)
     {
-        $this->adapter = (!$adapter ? new ArrayAdapter() : $adapter);
+        $this->resourceMediator = $mediator;
+    }
+    
+    public function getResourceMediator()
+    {
+        if(!$this->resourceMediator)
+            $this->setResourceMediator(new ResourceMediator());
+        
+        return $this->resourceMediator;
     }
     
     /**
-     * Append a resource to the configuration resources array
+     * Attach a resource to the configuration resources mediator
      * 
-     * @param string|ResourceInterface $resource
-     * @throws \InvalidArgumentException
-     * @return \Sandhje\Spanner\Config
+     * @param ResourceInterface $resource
+     * @return int|\Sandhje\Spanner\Config
      */
-    public function appendResource($resource)
+    public function attachResource(ResourceInterface $resource, $returnIdentifier = false)
     {
-        $resource = $this->prepResource($resource);
-        
-        $this->resources[] = $resource;
+        $identifier = $this->getResourceMediator()->attach($resource);
         
         $this->clearCache();
         
-        return $this;
+        return ($returnIdentifier ? $identifier : $this);
     }
     
     /**
-     * Prepend a resource to the configuration resources array
+     * Detach a resource from the configuration resources mediator
      * 
-     * @param string|ResourceInterface $resource
-     * @throws \InvalidArgumentException
+     * @param string $identifier
      * @return \Sandhje\Spanner\Config
      */
-    public function prependResource($resource)
+    public function detachResource($identifier)
     {
-        $resource = $this->prepResource($resource);
-        
-        array_unshift($this->resources, $resource);
-        
-        $this->clearCache();
+        $this->getResourceMediator()->detach($identifier);
         
         return $this;
-    }
-    
-    /**
-     * Set the configuration resources array
-     * 
-     * @param array $resourceArray
-     * @throws \InvalidArgumentException
-     * @return \Sandhje\Spanner\Config
-     */
-    public function setResourceArray(array $resourceArray)
-    {
-        $resources = array();
-        
-        foreach($resourceArray as $resource) {
-            $resources[] = $this->prepResource($resource);
-        }
-        
-        $this->resources = $resources;
-        
-        $this->clearCache();
-        
-        return $this;
-    }
-    
-    /**
-     * Get the resource collection
-     * 
-     * @return Sandhje\Spanner\Resource\ResourceCollection
-     */
-    public function getResourceCollection()
-    {
-        return new ResourceCollection($this->resources);
     }
     
     /**
@@ -204,27 +167,6 @@ class Config
     }
     
     /**
-     * Prepare and validate a resource for insertion into the resources property
-     * 
-     * @param string|\Sandhje\Spanner\Resource\LocalFilesystemResource $resource
-     * @throws \InvalidArgumentException
-     * @return \Sandhje\Spanner\Resource\LocalFilesystemResource
-     */
-    private function prepResource($resource)
-    {
-        if(is_string($resource)) {
-            $resource = new LocalFilesystemResource($resource);
-        }
-        
-        if(!is_object($resource) || !is_subclass_of($resource, 'Sandhje\Spanner\Resource\ResourceInterface'))
-        {
-            throw new \InvalidArgumentException("Invalid resource could not be appended to the resources array");
-        }
-        
-        return $resource;
-    }
-    
-    /**
      * Get the region array key
      * 
      * @param string $region
@@ -281,7 +223,7 @@ class Config
     {
         $regionKey = $region . "Config";
         
-        $configRegion = $this->adapter->load($this, $region);
+        $configRegion = $this->getResourceMediator()->load($region, $this->environment);
         
         if(!empty($configRegion)) {
             $this->regions[$regionKey] = $configRegion;

@@ -6,16 +6,11 @@ use Sandhje\Spanner\Config;
 use Sandhje\Spanner\Adapter\XmlAdapter;
 use Mockery;
 use Sandhje\Spanner\Test\Mock\MockFactory;
+use Sandhje\Spanner\Resource\LocalFilesystemResource;
+use Sandhje\Spanner\Resource\Strategy\ArrayStrategy;
 
 class XmlAdapterTest extends \PHPUnit_Framework_TestCase
 {
-    private $mockFactory;
-    
-    public function setUp()
-    {
-        $this->mockFactory = new MockFactory();
-    }
-    
     public function tearDown()
     {
         Mockery::close();
@@ -29,7 +24,7 @@ class XmlAdapterTest extends \PHPUnit_Framework_TestCase
         $file = $region . ".xml";
         $testConfig = json_encode(array("a" => "b"));
         $testConfig = "<bar><a>b</a></bar>";
-        $resource = $this->mockFactory->getMockLocalFilesystemDirResource($path);
+        $resource = Mockery::mock('Sandhje\Spanner\Resource\LocaFilesystemResource', array($path, new ArrayStrategy()));
         $resource->shouldReceive('load')->with($file, false)->andReturn($testConfig);
         
         // Act
@@ -51,7 +46,7 @@ class XmlAdapterTest extends \PHPUnit_Framework_TestCase
         $file = $region . ".xml";
         $testConfig = "<bar><a>b</a></bar>";
         $testEnvConfig = "<bar><c>d</c></bar>";
-        $resource = $this->mockFactory->getMockLocalFilesystemDirResource($path);
+        $resource = Mockery::mock('Sandhje\Spanner\Resource\LocaFilesystemResource', array($path, new ArrayStrategy()));
         $resource->shouldReceive('load')->with($file, false)->andReturn($testConfig);
         $resource->shouldReceive('load')->with($file, $env)->andReturn($testEnvConfig);
         
@@ -75,9 +70,9 @@ class XmlAdapterTest extends \PHPUnit_Framework_TestCase
         $file = $region . ".xml";
         $array1 = "<acme><a>lorem</a><b>ipsum</b></acme>";
         $array2 = "<acme><b>dolor</b><c>sit amet</c></acme>";
-        $resource1 = $this->mockFactory->getMockLocalFilesystemDirResource($path1);
+        $resource1 = Mockery::mock('Sandhje\Spanner\Resource\LocaFilesystemResource', array($path1, new ArrayStrategy()));
         $resource1->shouldReceive('load')->with($file, false)->andReturn($array1);
-        $resource2 = $this->mockFactory->getMockLocalFilesystemDirResource($path2);
+        $resource2 = Mockery::mock('Sandhje\Spanner\Resource\LocaFilesystemResource', array($path2, new ArrayStrategy()));
         $resource2->shouldReceive('load')->with($file, false)->andReturn($array2);
     
         // Act
@@ -100,9 +95,9 @@ class XmlAdapterTest extends \PHPUnit_Framework_TestCase
         $file = $region . ".xml";
         $array1 = "<acme><a><b>lorem</b><c>ipsum</c></a></acme>";
         $array2 = "<acme><a><c>dolor</c><d>sit amet</d></a></acme>";
-        $resource1 = $this->mockFactory->getMockLocalFilesystemDirResource($path1);
+        $resource1 = Mockery::mock('Sandhje\Spanner\Resource\LocaFilesystemResource', array($path1, new ArrayStrategy()));
         $resource1->shouldReceive('load')->with($file, false)->andReturn($array1);
-        $resource2 = $this->mockFactory->getMockLocalFilesystemDirResource($path2);
+        $resource2 = Mockery::mock('Sandhje\Spanner\Resource\LocaFilesystemResource', array($path2, new ArrayStrategy()));
         $resource2->shouldReceive('load')->with($file, false)->andReturn($array2);
     
         // Act

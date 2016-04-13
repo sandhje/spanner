@@ -17,11 +17,18 @@ class LocalFilesystemDirectoryState extends LocalFilesystemBaseState implements 
         $loadResult = false;
         
         if($environment) {
-            $location = $this->mergePathParts($resource, $environment, $file);
+            $location = $resource;
+            
+            if(!is_array($environment))
+                $environment = array($environment);
+            
+            foreach($environment as $segment) {
+                $location = $this->mergePathParts($location, $segment);
+            }
+            
+            $location = $this->mergePathParts($location, $file);
             $loadResult = $this->load($location);
-        }
-        
-        if(!$loadResult) {            
+        } else {          
             $location = $this->mergePathParts($resource, $file);
             $loadResult = $this->load($location);
         }

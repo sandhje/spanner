@@ -6,16 +6,11 @@ use Sandhje\Spanner\Config;
 use Sandhje\Spanner\Adapter\IniAdapter;
 use Mockery;
 use Sandhje\Spanner\Test\Mock\MockFactory;
+use Sandhje\Spanner\Resource\LocalFilesystemResource;
+use Sandhje\Spanner\Resource\Strategy\ArrayStrategy;
 
 class IniAdapterTest extends \PHPUnit_Framework_TestCase
 {
-    private $mockFactory;
-    
-    public function setUp()
-    {
-        $this->mockFactory = new MockFactory();
-    }
-    
     public function tearDown()
     {
         Mockery::close();
@@ -28,7 +23,7 @@ class IniAdapterTest extends \PHPUnit_Framework_TestCase
         $region = "bar";
         $file = $region . ".ini";
         $testConfig = 'a=b';
-        $resource = $this->mockFactory->getMockLocalFilesystemDirResource($path);
+        $resource = Mockery::mock('Sandhje\Spanner\Resource\LocaFilesystemResource', array($path, new ArrayStrategy()));
         $resource->shouldReceive('load')->with($file, false)->andReturn($testConfig);
         
         // Act
@@ -50,7 +45,7 @@ class IniAdapterTest extends \PHPUnit_Framework_TestCase
         $file = $region . ".ini";
         $testConfig = 'a=b';
         $testEnvConfig = 'c=d';
-        $resource = $this->mockFactory->getMockLocalFilesystemDirResource($path);
+        $resource = Mockery::mock('Sandhje\Spanner\Resource\LocaFilesystemResource', array($path, new ArrayStrategy()));
         $resource->shouldReceive('load')->with($file, false)->andReturn($testConfig);
         $resource->shouldReceive('load')->with($file, $env)->andReturn($testEnvConfig);
         
@@ -80,9 +75,9 @@ class IniAdapterTest extends \PHPUnit_Framework_TestCase
             b=dolor
             c=sit amet
         ';
-        $resource1 = $this->mockFactory->getMockLocalFilesystemDirResource($path1);
+        $resource1 = Mockery::mock('Sandhje\Spanner\Resource\LocaFilesystemResource', array($path1, new ArrayStrategy()));
         $resource1->shouldReceive('load')->with($file, false)->andReturn($array1);
-        $resource2 = $this->mockFactory->getMockLocalFilesystemDirResource($path2);
+        $resource2 = Mockery::mock('Sandhje\Spanner\Resource\LocaFilesystemResource', array($path2, new ArrayStrategy()));
         $resource2->shouldReceive('load')->with($file, false)->andReturn($array2);
     
         // Act
@@ -113,9 +108,9 @@ c=ipsum
 c=dolor
 d=sit amet
         '; 
-        $resource1 = $this->mockFactory->getMockLocalFilesystemDirResource($path1);
+        $resource1 = Mockery::mock('Sandhje\Spanner\Resource\LocaFilesystemResource', array($path1, new ArrayStrategy()));
         $resource1->shouldReceive('load')->with($file, false)->andReturn($array1);
-        $resource2 = $this->mockFactory->getMockLocalFilesystemDirResource($path2);
+        $resource2 = Mockery::mock('Sandhje\Spanner\Resource\LocaFilesystemResource', array($path2, new ArrayStrategy()));
         $resource2->shouldReceive('load')->with($file, false)->andReturn($array2);
     
         // Act

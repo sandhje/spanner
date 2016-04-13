@@ -25,12 +25,20 @@ class LocalFilesystemFileState extends LocalFilesystemBaseState implements Local
         }
         
         if($environment) {
-            $environmentFile = $resourcePathInfo["filename"] . "." . $environment . "." . $resourcePathInfo["extension"];
+            $environmentFile = $resourcePathInfo["filename"];
+            
+            if(!is_array($environment))
+                $environment = array($environment);
+            
+            foreach($environment as $segment) {
+                $environmentFile .= "." . $segment;
+            }
+                
+            $environmentFile .= "." . $resourcePathInfo["extension"];
+            
             $location = $this->mergePathParts($resourcePathInfo["dirname"], $environmentFile);
             $loadResult = $this->load($location);
-        }
-        
-        if(!$loadResult) {
+        } else {
             $loadResult = $this->load($resource);
         }
         

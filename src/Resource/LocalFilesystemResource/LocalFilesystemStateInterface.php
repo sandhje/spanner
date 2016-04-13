@@ -13,7 +13,7 @@ interface LocalFilesystemStateInterface
      * 
      * @param string $resource
      * @param string $file
-     * @param string $environment
+     * @param string|array $environment
      * @return mixed File content
      */
     public function loadFile($resource, $file, $environment = false);
