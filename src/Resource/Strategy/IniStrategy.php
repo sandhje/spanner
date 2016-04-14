@@ -6,7 +6,7 @@ namespace Sandhje\Spanner\Resource\Strategy;
  * @author Sandhje
  *        
  */
-class ArrayStrategy implements ResourceStrategyInterface, FilesystemResourceStrategyInterface
+class IniStrategy implements ResourceStrategyInterface, FilesystemResourceStrategyInterface
 {
 
     /**
@@ -17,8 +17,11 @@ class ArrayStrategy implements ResourceStrategyInterface, FilesystemResourceStra
      */
     public function translate($content)
     {
-        if(!is_array($content))
+        $content = parse_ini_string($content, true);
+        
+        if(!$content) { 
             throw new \Exception("Invalid configuration file.");
+        }
         
         return $content;
     }
@@ -31,7 +34,7 @@ class ArrayStrategy implements ResourceStrategyInterface, FilesystemResourceStra
      */
     public function getFilename($region)
     {
-        return $region . ".php";
+        return $region . ".ini";
     }
 }
 

@@ -6,7 +6,7 @@ namespace Sandhje\Spanner\Resource\Strategy;
  * @author Sandhje
  *        
  */
-class ArrayStrategy implements ResourceStrategyInterface, FilesystemResourceStrategyInterface
+class JsonStrategy implements ResourceStrategyInterface, FilesystemResourceStrategyInterface
 {
 
     /**
@@ -17,8 +17,11 @@ class ArrayStrategy implements ResourceStrategyInterface, FilesystemResourceStra
      */
     public function translate($content)
     {
-        if(!is_array($content))
-            throw new \Exception("Invalid configuration file.");
+        $content = json_decode($content, true);
+        
+        if(json_last_error()) {
+            throw new \Exception("Invalid configuration file. Error: " . json_last_error_msg());
+        }
         
         return $content;
     }
@@ -31,7 +34,7 @@ class ArrayStrategy implements ResourceStrategyInterface, FilesystemResourceStra
      */
     public function getFilename($region)
     {
-        return $region . ".php";
+        return $region . ".json";
     }
 }
 

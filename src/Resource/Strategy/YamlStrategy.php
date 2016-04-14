@@ -1,12 +1,14 @@
 <?php
 namespace Sandhje\Spanner\Resource\Strategy;
 
+use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Exception\ParseException;
 /**
  *
  * @author Sandhje
  *        
  */
-class ArrayStrategy implements ResourceStrategyInterface, FilesystemResourceStrategyInterface
+class YamlStrategy implements ResourceStrategyInterface, FilesystemResourceStrategyInterface
 {
 
     /**
@@ -17,9 +19,12 @@ class ArrayStrategy implements ResourceStrategyInterface, FilesystemResourceStra
      */
     public function translate($content)
     {
-        if(!is_array($content))
-            throw new \Exception("Invalid configuration file.");
-        
+        try {
+            $content = Yaml::parse($content, true);
+        } catch(ParseException $e) {
+            throw new \Exception("Invalid configuration file. Error: " . $e->getMessage());            
+        }
+           
         return $content;
     }
 
@@ -31,7 +36,7 @@ class ArrayStrategy implements ResourceStrategyInterface, FilesystemResourceStra
      */
     public function getFilename($region)
     {
-        return $region . ".php";
+        return $region . ".yml";
     }
 }
 

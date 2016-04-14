@@ -98,15 +98,11 @@ class ResourceMediator implements ResourceMediatorInterface
         
         $argList = func_get_args();
         
-        var_dump($argList);
-        
         for ($i = 0; $i < func_num_args(); $i++) {
             if(is_array($argList[$i])) {
                 $result = array_replace_recursive($result, $argList[$i]);
             }
         }
-        
-        var_dump($result);
         
         return $result;
     }
