@@ -48,7 +48,7 @@ class ResourceMediator implements ResourceMediatorInterface
      * {@inheritDoc}
      * @see \Sandhje\Spanner\Resource\ResourceMediatorInterface::load()
      */
-    public function load($region, $environment)
+    public function load($region, $environment = null)
     {
         $resourceCollection = $this->getResourceCollection();
         
