@@ -86,10 +86,6 @@ class FilesystemProxyTest extends \PHPUnit_Framework_TestCase
     public function testNegativeIs_readable()
     {
         // Arrange
-        $barFile = new vfsStreamFile("bar.php");
-        $barFile->chmod(111);
-        $root = vfsStreamWrapper::getRoot();
-        $root->addChild($barFile);
     
         // Act
         $filesystemProxy = new FilesystemProxy();
