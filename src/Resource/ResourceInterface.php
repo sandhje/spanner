@@ -22,7 +22,7 @@ interface ResourceInterface
      *
      * @param string $item
      * @param string|array $environment
-     * @return array
+     * @return array|bool
      */
     public function load($item, $environment = false);
     
