@@ -158,7 +158,7 @@ strategies:
 Set the strategy upon instantion of the resource class:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$resource = new LocalFilesystemResource('resource', new YamlAdapter());
+$resource = new LocalFilesystemResource('resource', new YamlStrategy());
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #### ArrayStrategy
@@ -251,9 +251,9 @@ collation: utf8_general_ci
 prefix:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#### Creating your own adapter
+#### Creating your own strategy
 
-You can easily create your own adapter by either extending one of the existing
+You can easily create your own stratgy by either extending one of the existing
 strategy classes that closely matches your needs or by implementing the
 `\Sandhje\Spanner\Resource\Strategy\ResourceStrategyinterface`.
 
