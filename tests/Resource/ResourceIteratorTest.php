@@ -4,6 +4,7 @@ namespace Sandhje\Spanner\Test\Resource;
 use Mockery;
 use Sandhje\Spanner\Resource\LocalFilesystemResource;
 use Sandhje\Spanner\Resource\ResourceIterator;
+use Sandhje\Spanner\Resource\Strategy\ArrayStrategy;
 
 /**
  *
@@ -20,15 +21,11 @@ class ResourceIteratorTest extends \PHPUnit_Framework_TestCase
     public function testIteratorArray()
     {
         // Arrange
-        $resource1 = "/foo";
-        $resource2 = "/bar";
-        $resourceStrategy = Mockery::mock('Sandhje\Spanner\Resource\Strategy\LocalFilesystemFileStrategy');
-        $filesystem = Mockery::mock('Sandhje\Spanner\Filesystem\Filesystem');
-        $filesystem->shouldReceive('is_readable')->with($resource1)->andReturn(true);
-        $filesystem->shouldReceive('is_readable')->with($resource2)->andReturn(true);
-        $array = array(new LocalFilesystemResource($resource1, $resourceStrategy, $filesystem), new LocalFilesystemResource($resource2, $resourceStrategy, $filesystem));
-        $result_keys = array();
-        $result_values = array();
+        $resource1 = new LocalFilesystemResource("/foo", new ArrayStrategy()); 
+        $resource2 = new LocalFilesystemResource("/bar", new ArrayStrategy());
+        $array = array($resource1, $resource2);
+        $result_keys = [];
+        $result_values = [];
         
         // Act
         $resourceIterator = new ResourceIterator($array);

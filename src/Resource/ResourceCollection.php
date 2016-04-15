@@ -1,6 +1,7 @@
 <?php
 namespace Sandhje\Spanner\Resource;
 
+use Doctrine\Instantiator\Exception\InvalidArgumentException;
 /**
  *
  * @author Sandhje
@@ -17,6 +18,11 @@ class ResourceCollection implements \IteratorAggregate
 
     public function __construct(array $data)
     {
+        foreach($data as $resource) {
+            if(!($resource instanceof ResourceInterface))
+                throw new \InvalidArgumentException('Argument 1 passed to ResourceCollection::__construct() must be an array of ResourceInterface');
+        }
+        
         $this->data = $data;
     }
     

@@ -5,74 +5,49 @@ namespace Sandhje\Spanner\Test;
 use Sandhje\Spanner\Config;
 use Mockery;
 use Sandhje\Spanner\Config\ConfigCollection;
-use Sandhje\Spanner\Test\Mock\MockFactory;
 use Sandhje\Spanner\Resource\ResourceCollection;
+use Sandhje\Spanner\Resource\LocalFilesystemResource;
+use Sandhje\Spanner\Resource\Strategy\ArrayStrategy;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
-    private $mockFactory;
-    
-    public function setUp()
-    {
-        $this->mockFactory = new MockFactory();
-    }
-    
     public function tearDown()
     {
         Mockery::close();
     }
     
-    public function testSetGetResourceArray()
+    public function testAttachResource()
     {
         // Arrange
-        $resourceArray = array (
-            $this->mockFactory->getMockLocalFilesystemDirResource("foo/"),
-            $this->mockFactory->getMockLocalFilesystemDirResource("bar/")
-        );
-    
-        // Act
+        $resource1 = new LocalFilesystemResource("foo/", new ArrayStrategy());
+        $resource2 = new LocalFilesystemResource("bar/", new ArrayStrategy());
+        $mediator = Mockery::mock('Sandhje\Spanner\Resource\ResourceMediator');
+        $mediator->shouldReceive('attach')->twice()->andReturn("1", "2");
         $config = new Config();
-        $config->setResourceArray($resourceArray);
-        $resultResourceArray = $config->getResourceCollection();
-    
-        // Assert
-        $this->assertEquals(new ResourceCollection($resourceArray), $resultResourceArray);
-    }
-    
-    public function testAppendResource()
-    {
-        // Arrange
-        $resourceArray = array (
-            $this->mockFactory->getMockLocalFilesystemDirResource("foo/"),
-            $this->mockFactory->getMockLocalFilesystemDirResource("bar/")
-        );
-        $config = new Config();
+        $config->setResourceMediator($mediator);
         
         // Act
-        $config->appendResource($resourceArray[0]);
-        $config->appendResource($resourceArray[1]);
-        $resultResourceCollection = $config->getResourceCollection();
+        $result1 = $config->attachResource($resource1);
+        $result2 = $config->attachResource($resource2, true);
         
         // Assert
-        $this->assertEquals(new ResourceCollection($resourceArray), $resultResourceCollection);
+        $this->assertEquals($config, $result1);
+        $this->assertEquals("2", $result2);
     }
     
-    public function testPrependResource()
+    public function testDetachResource()
     {
         // Arrange
-        $resourceArray = array (
-            $this->mockFactory->getMockLocalFilesystemDirResource("foo/"),
-            $this->mockFactory->getMockLocalFilesystemDirResource("bar/")
-        );
+        $mediator = Mockery::mock('Sandhje\Spanner\Resource\ResourceMediator');
+        $mediator->shouldReceive('detach')->with("1")->once();        
         $config = new Config();
+        $config->setResourceMediator($mediator);
     
         // Act
-        $config->prependResource($resourceArray[1]);
-        $config->prependResource($resourceArray[0]);
-        $resultResourceCollection = $config->getResourceCollection();
+        $config->detachResource("1");
     
         // Assert
-        $this->assertEquals(new ResourceCollection($resourceArray), $resultResourceCollection);
+        // Intensionally empty - the test will fail if the expected method on the mocked mediator is not called
     }
     
     public function testSetGetEnvironment()
@@ -94,9 +69,10 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $region = "acme";
         $regionArray = array("foo" => "bar");
-        $arrayAdapter = Mockery::mock('Sandhje\Spanner\Adapter\ArrayAdapter');
-        $arrayAdapter->shouldReceive("load")->with(Mockery::type('Sandhje\Spanner\Config'),$region)->andReturn($regionArray);
-        $config = new Config($arrayAdapter);
+        $mediator = Mockery::mock('Sandhje\Spanner\Resource\ResourceMediator');
+        $mediator->shouldReceive("load")->with($region, null)->andReturn($regionArray);
+        $config = new Config();
+        $config->setResourceMediator($mediator);
     
         // Act
         $result = $config->get($region);
@@ -111,9 +87,10 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $region = "acme";
         $regionArray = array("foo" => "bar");
         $regionArray2 = array("foo" => "lorem");
-        $arrayAdapter = Mockery::mock('Sandhje\Spanner\Adapter\ArrayAdapter');
-        $arrayAdapter->shouldReceive("load")->with(Mockery::type('Sandhje\Spanner\Config'),$region)->andReturn($regionArray);
-        $config = new Config($arrayAdapter);
+        $mediator = Mockery::mock('Sandhje\Spanner\Resource\ResourceMediator');
+        $mediator->shouldReceive("load")->with($region, null)->andReturn($regionArray);
+        $config = new Config();
+        $config->setResourceMediator($mediator);
     
         // Act
         $config->set($region, key($regionArray2), current($regionArray2));
@@ -129,14 +106,16 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $region = "acme";
         $regionArray = array("foo" => "bar");
         $regionArray2 = array("foo" => "lorem");
-        $arrayAdapter = Mockery::mock('Sandhje\Spanner\Adapter\ArrayAdapter');
-        $arrayAdapter->shouldReceive("load")->with(Mockery::type('Sandhje\Spanner\Config'),$region)->andReturn($regionArray);
-        $resource = $this->mockFactory->getMockLocalFilesystemDirResource("test/");
+        $mediator = Mockery::mock('Sandhje\Spanner\Resource\ResourceMediator');
+        $mediator->shouldReceive("attach");
+        $mediator->shouldReceive("load")->with($region, null)->andReturn($regionArray);
+        $config = new Config();
+        $config->setResourceMediator($mediator);
+        $resource = new LocalFilesystemResource("/foo", new ArrayStrategy());
         
         // Act
-        $config = new Config($arrayAdapter);
         $config->set($region, key($regionArray2), current($regionArray2)); 
-        $config->appendResource($resource);
+        $config->attachResource($resource);
         $result = $config->get($region);
         
         // Assert
