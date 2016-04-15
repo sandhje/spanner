@@ -1,16 +1,22 @@
 <?php
-namespace Sandhje\Spanner\Resource\Strategy;
+namespace Sandhje\Spanner\Resource\LocalFilesystemResource;
 
+use Sandhje\Spanner\Proxy\FilesystemProxy;
 /**
  *
  * @author Sandhje
  *        
  */
-class LocalFilesystemBaseStrategy
+abstract class LocalFilesystemBaseState
 {
-    private function __construct()
+    /**
+     * @var FilesystemProxy
+     */
+    protected $filesystemProxy;
+    
+    public function __construct(FilesystemProxy $filesystemProxy)
     {
-        throw new \RuntimeException("Direct instantiation of LocalFilesystemBaseStrategy not allowed");
+        $this->filesystemProxy = $filesystemProxy;
     }
     
     /**
@@ -37,8 +43,8 @@ class LocalFilesystemBaseStrategy
      */
     protected function load($location)
     {
-        if($this->filesystem->is_file($location) && $this->filesystem->is_readable($location)) {
-            return $this->filesystem->load($location);
+        if($this->filesystemProxy->is_file($location) && $this->filesystemProxy->is_readable($location)) {
+            return $this->filesystemProxy->load($location);
         }
     
         return false;

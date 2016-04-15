@@ -17,6 +17,11 @@ class ResourceIterator implements \Iterator
 
     public function __construct(array $data)
     {
+        foreach($data as $resource) {
+            if(!($resource instanceof ResourceInterface))
+                throw new \InvalidArgumentException('Argument 1 passed to ResourceIterator::__construct() must be an array of ResourceInterface');
+        }
+        
         $this->data = $data;
     }
     

@@ -1,10 +1,13 @@
 <?php
 namespace Sandhje\Spanner\Resource;
 
-use Sandhje\Spanner\Filesystem\Filesystem;
-use Sandhje\Spanner\Resource\Strategy\LocalFilesystemStrategyInterface;
-use Sandhje\Spanner\Resource\Strategy\LocalFilesystemFileStrategy;
-use Sandhje\Spanner\Resource\Strategy\LocalFilesystemDirectoryStrategy;
+use Sandhje\Spanner\Proxy\FilesystemProxy;
+use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemStateInterface;
+use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemFileState;
+use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemDirectoryState;
+use Sandhje\Spanner\Resource\Strategy\ResourceStrategyInterface;
+use Sandhje\Spanner\Resource\Strategy\FilesystemResourceStrategyInterface;
+
 /**
  *
  * @author Sandhje
@@ -20,36 +23,123 @@ class LocalFilesystemResource implements ResourceInterface
     private $resource;
     
     /**
-     * Filesystem resource strategy
+     * Resource strategy
      * 
-     * @var LocalFilesystemStrategyInterface
+     * @var FilesystemResourceStrategyInterface
      */
     private $strategy;
     
     /**
-     * Filesystem wrapper class
-     *
-     * @var Filesystem
+     * Filesystem resource state
+     * 
+     * @var LocalFilesystemStateInterface
      */
-    private $filesystem;
+    private $state;
+    
+    /**
+     * Filesystem proxy class
+     *
+     * @var FilesystemProxy
+     */
+    private $filesystemProxy;
 
-    public function __construct($resource, LocalFilesystemStrategyInterface $resourceStrategy = null, Filesystem $filesystem = null)
+    public function __construct($resource, ResourceStrategyInterface $strategy)
     {
-        $this->filesystem = (!$filesystem ? new Filesystem() : $filesystem);
+        $this->setResource($resource);
         
-        if (!$this->filesystem->is_readable($resource)) {
-            throw new \InvalidArgumentException("Passed resource is not readable");
+        if(!($strategy instanceof FilesystemResourceStrategyInterface))
+            throw new \InvalidArgumentException('Argument 2 passed to LocalFilesystemResource::__construct() must implement FilesystemResourceStrategyInterface');
+        
+        $this->setStrategy($strategy);
+    }
+
+    /**
+     * @return the $strategy
+     */
+    private function getStrategy()
+    {
+        return $this->strategy;
+    }
+
+    /**
+     * @param \Sandhje\Spanner\Resource\Strategy\FilesystemResourceStrategyInterface $strategy
+     */
+    private function setStrategy(FilesystemResourceStrategyInterface $strategy)
+    {
+        $this->strategy = $strategy;
+    }
+
+    /**
+     * LocalFilesystemStateInterface $fileState
+     */
+    public function setFileState(LocalFilesystemStateInterface $fileState = null)
+    {
+        $this->state = $fileState ?: new LocalFilesystemFileState($this->getFilesystemProxy());
+    }
+    
+    /**
+     * LocalFilesystemStateInterface $directoryState
+     */
+    public function setDirectoryState(LocalFilesystemDirectoryState $directoryState = null)
+    {
+        $this->state = $directoryState ?: new LocalFilesystemDirectoryState($this->getFilesystemProxy());
+    }
+    
+    /**
+     * @return \Sandhje\Spanner\Resource\LocalFilesystemResource\StateInterface
+     */
+    public function getState()
+    {
+        if(!$this->state) {
+            if ($this->getFilesystemProxy()->is_file($this->resource)) {
+                $this->setFileState();
+            } else {
+                $this->setDirectoryState();
+            }
         }
         
+        return $this->state;
+    }
+    
+    /**
+     * @param \Sandhje\Spanner\Proxy\FilesystemProxy $filesystemProxy
+     */
+    public function setFilesystemProxy(FilesystemProxy $filesystemProxy = null)
+    {
+        $this->filesystemProxy = $filesystemProxy ?: new FilesystemProxy();
+    }
+    
+    /**
+     * @return \Sandhje\Spanner\Proxy\FilesystemProxy
+     */
+    public function getFilesystemProxy()
+    {
+        if(!$this->filesystemProxy) {
+            $this->setFilesystemProxy();
+        }
+        
+        return $this->filesystemProxy;
+    }
+    
+    /**
+     * @param string $resource
+     */
+    private function setResource($resource)
+    {
         $this->resource = $resource;
-        
-        if ($resourceStrategy) {
-            $this->strategy = $resourceStrategy;
-        } else if ($this->filesystem->is_file($resource)) {    
-            $this->strategy = new LocalFilesystemFileStrategy($this->filesystem);
-        } else {
-            $this->strategy = new LocalFilesystemDirectoryStrategy($this->filesystem);
+    }
+    
+    /**
+     * @throws \Exception
+     * @return string
+     */
+    private function getResource()
+    {
+        if(!$this->resource || !$this->getFilesystemProxy()->is_readable($this->resource)) {
+            throw new \Exception("Invalid resource");
         }
+        
+        return $this->resource;
     }
 
     /**
@@ -58,9 +148,25 @@ class LocalFilesystemResource implements ResourceInterface
      */
     public function load($item, $environment = false)
     {
-        return $this->strategy->loadFile($this->resource, $item, $environment);
-    }
+        $content = $this->getState()->loadFile(
+            $this->getResource(), 
+            $this->getStrategy()->getFilename($item), 
+            $environment
+        );
 
+        return $this->strategy->translate($content);
+    }
+    
+    /**
+     * {@inheritDoc}
+     * @see \Sandhje\Spanner\Resource\ResourceInterface::tryLoad()
+     */
+    public function tryLoad(&$result, $item, $environment = false)
+    {
+        $result = $this->load($item, $environment);
+        
+        return (is_array($result) && count($result));
+    }
 }
 
 ?>
