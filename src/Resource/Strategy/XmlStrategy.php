@@ -17,6 +17,9 @@ class XmlStrategy implements ResourceStrategyInterface, FilesystemResourceStrate
      */
     public function translate($content)
     {
+        if(empty($content))
+            return array();
+        
         libxml_use_internal_errors(true);
         
         $content = simplexml_load_string($content, "SimpleXMLElement", LIBXML_NOCDATA);

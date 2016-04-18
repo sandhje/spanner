@@ -34,6 +34,19 @@ class ArrayStrategyTest extends \PHPUnit_Framework_TestCase
         // Intensionally empty, test fails if expected exception is not thrown
     }
     
+    public function testTranslateEmpty()
+    {
+        // Arrange
+        $testConfig = false;
+        
+        // Act
+        $arrayStrategy = new ArrayStrategy();
+        $result = $arrayStrategy->translate($testConfig);
+        
+        // Assert
+        $this->assertEquals(array(), $result);
+    }
+    
     public function testGetFilename()
     {
         // Arrange

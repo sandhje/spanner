@@ -35,6 +35,19 @@ class JsonStrategyTest extends \PHPUnit_Framework_TestCase
         // Intensionally empty, test fails if expected exception is not thrown
     }
     
+    public function testTranslateEmpty()
+    {
+        // Arrange
+        $testConfig = false;
+    
+        // Act
+        $jsonStrategy = new JsonStrategy();
+        $result = $jsonStrategy->translate($testConfig);
+    
+        // Assert
+        $this->assertEquals(array(), $result);
+    }
+    
     public function testGetFilename()
     {
         // Arrange

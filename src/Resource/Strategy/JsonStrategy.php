@@ -17,6 +17,9 @@ class JsonStrategy implements ResourceStrategyInterface, FilesystemResourceStrat
      */
     public function translate($content)
     {
+        if(empty($content))
+            return array();
+        
         $content = json_decode($content, true);
         
         if(json_last_error()) {

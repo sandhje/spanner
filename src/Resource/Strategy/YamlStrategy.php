@@ -19,6 +19,9 @@ class YamlStrategy implements ResourceStrategyInterface, FilesystemResourceStrat
      */
     public function translate($content)
     {
+        if(empty($content))
+            return array();
+        
         try {
             $content = Yaml::parse($content, true);
         } catch(ParseException $e) {

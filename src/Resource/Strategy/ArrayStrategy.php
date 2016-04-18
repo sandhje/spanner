@@ -17,6 +17,9 @@ class ArrayStrategy implements ResourceStrategyInterface, FilesystemResourceStra
      */
     public function translate($content)
     {
+        if(empty($content))
+            return array();
+        
         if(!is_array($content))
             throw new \Exception("Invalid configuration file.");
         

@@ -35,6 +35,19 @@ class XmlStrategyTest extends \PHPUnit_Framework_TestCase
         // Intensionally empty, test fails if expected exception is not thrown
     }
     
+    public function testTranslateEmpty()
+    {
+        // Arrange
+        $testConfig = false;
+    
+        // Act
+        $xmlStrategy = new XmlStrategy();
+        $result = $xmlStrategy->translate($testConfig);
+    
+        // Assert
+        $this->assertEquals(array(), $result);
+    }
+    
     public function testGetFilename()
     {
         // Arrange

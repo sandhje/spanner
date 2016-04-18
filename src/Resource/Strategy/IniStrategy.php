@@ -17,6 +17,9 @@ class IniStrategy implements ResourceStrategyInterface, FilesystemResourceStrate
      */
     public function translate($content)
     {
+        if(empty($content))
+            return array();
+        
         $content = parse_ini_string($content, true);
         
         if(!$content) { 
