@@ -22,7 +22,7 @@ class LocalFilesystemResourceTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $resource = "/foo";
         $region = "bar";
-        $file = $region . ".php";
+        $file = [$region . ".php"];
         $environment = "acme";
         $fileContent = array("a" => "b");
         $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');

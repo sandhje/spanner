@@ -59,6 +59,6 @@ class IniStrategyTest extends \PHPUnit_Framework_TestCase
         $result = $iniStrategy->getFilename($region);
     
         // Assert
-        $this->assertEquals($file, $result);
+        $this->assertEquals(array($file), $result);
     }
 }

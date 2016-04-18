@@ -39,7 +39,10 @@ class YamlStrategy implements ResourceStrategyInterface, FilesystemResourceStrat
      */
     public function getFilename($region)
     {
-        return $region . ".yml";
+        return array(
+            $region . ".yml",
+            $region . ".yaml"
+        );
     }
 }
 

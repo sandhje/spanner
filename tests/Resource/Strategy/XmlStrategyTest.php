@@ -59,6 +59,6 @@ class XmlStrategyTest extends \PHPUnit_Framework_TestCase
         $result = $xmlStrategy->getFilename($region);
     
         // Assert
-        $this->assertEquals($file, $result);
+        $this->assertEquals(array($file), $result);
     }
 }

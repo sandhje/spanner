@@ -37,7 +37,7 @@ class JsonStrategy implements ResourceStrategyInterface, FilesystemResourceStrat
      */
     public function getFilename($region)
     {
-        return $region . ".json";
+        return array($region . ".json");
     }
 }
 

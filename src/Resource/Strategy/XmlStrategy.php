@@ -51,7 +51,7 @@ class XmlStrategy implements ResourceStrategyInterface, FilesystemResourceStrate
      */
     public function getFilename($region)
     {
-        return $region . ".xml";
+        return array($region . ".xml");
     }
 }
 

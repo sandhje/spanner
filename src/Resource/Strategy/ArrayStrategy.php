@@ -34,7 +34,9 @@ class ArrayStrategy implements ResourceStrategyInterface, FilesystemResourceStra
      */
     public function getFilename($region)
     {
-        return $region . ".php";
+        return array(
+            $region . ".php"
+        );
     }
 }
 

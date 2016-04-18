@@ -37,7 +37,7 @@ class IniStrategy implements ResourceStrategyInterface, FilesystemResourceStrate
      */
     public function getFilename($region)
     {
-        return $region . ".ini";
+        return array($region . ".ini");
     }
 }
 
