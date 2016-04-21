@@ -48,15 +48,9 @@ class ResourceMediator implements ResourceMediatorInterface
      * {@inheritDoc}
      * @see \Sandhje\Spanner\Resource\ResourceMediatorInterface::load()
      */
-    public function load($region, $environment = null)
+    public function load($region, $environmentCollection = null)
     {
         $resourceCollection = $this->getResourceCollection();
-        
-        if(is_null($environment))
-            $environment = array();
-        
-        if(!is_array($environment))
-            $environment = array($environment);
         
         $results = [];
         foreach($resourceCollection->getIterator() as $resource) {
@@ -67,18 +61,12 @@ class ResourceMediator implements ResourceMediatorInterface
                 $resourceResults[] = $resourceResult;
             }
             
-            // TODO: Refactor into environment iterator 
-            // --> should iterate from least specific to most specific e.g. if environment has three values:
-            // 1) env1
-            // 2) env2
-            // 3) env1/env2
-            // 4) env3
-            // 5) env1/env3
-            // 6) env1/env2/env3
-            for($i = 0; $i < count($environment); $i++) { 
-                $resourceResult = [];
-                if($resource->tryLoad($resourceResult, $region, array_slice($environment, 0, ($i + 1)))) {
-                    $resourceResults[] = $resourceResult;
+            if(!empty($environmentCollection)) {                
+                foreach($environmentCollection->getIterator() as $environment) {
+                    $resourceResult = [];
+                    if($resource->tryLoad($resourceResult, $region, $environment)) {
+                        $resourceResults[] = $resourceResult;
+                    }
                 }
             }
             
