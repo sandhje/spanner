@@ -21,12 +21,12 @@ class EnvironmentIterator implements \Iterator
         
         for($segment = 0; $segment < count($data); $segment++) {
             for($cycle = 0; $cycle <= $segment; $cycle++) {
-                $cycleData = array_filter($data, function($value, $key) use ($segment, $cycle) {
-                    if($segment == $key) return true; // Include the segment itself
-                    if($key < $cycle) return true; // Include higher level environments
+                $cycleData = array_filter(array_flip($data), function($value) use ($segment, $cycle) {
+                    if($segment == $value) return true; // Include the segment itself
+                    if($value < $cycle) return true; // Include higher level environments
                     return false;
-                }, ARRAY_FILTER_USE_BOTH);
-                $this->data[] = array_values($cycleData);
+                });
+                $this->data[] = array_values(array_intersect_key($data, array_flip($cycleData)));
             };
         }
     }
