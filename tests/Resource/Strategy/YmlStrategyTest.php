@@ -2,7 +2,6 @@
 
 namespace Sandhje\Spanner\Test\Resource\Strategy;
 
-use Sandhje\Spanner\Config;
 use Symfony\Component\Yaml\Yaml;
 use Sandhje\Spanner\Resource\Strategy\YamlStrategy;
 

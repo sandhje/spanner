@@ -1,7 +1,6 @@
 <?php
 namespace Sandhje\Spanner\Test\Environment;
 
-use Mockery;
 use Sandhje\Spanner\Environment\EnvironmentCollection;
 /**
  *
