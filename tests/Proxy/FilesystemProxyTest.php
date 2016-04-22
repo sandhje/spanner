@@ -5,7 +5,6 @@ use Sandhje\Spanner\Proxy\FilesystemProxy;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\vfsStreamDirectory;
-use org\bovigo\vfs\vfsStreamFile;
 
 /**
  *

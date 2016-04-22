@@ -4,9 +4,8 @@ namespace Resource;
 use Sandhje\Spanner\Resource\ResourceMediator;
 use Sandhje\Spanner\Resource\LocalFilesystemResource;
 use Sandhje\Spanner\Resource\Strategy\ArrayStrategy;
-use Sandhje\Spanner\Resource\ResourceCollection;
-use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemDirectoryState;
 use Mockery;
+use Sandhje\Spanner\Environment\EnvironmentCollection;
 /**
  *
  * @author Sandhje
@@ -41,7 +40,7 @@ class ResourceMediatorTest extends \PHPUnit_Framework_TestCase
         $mediator = new ResourceMediator();
     
         // Act
-        $key1 = $mediator->attach($resource1);
+        $mediator->attach($resource1);
         $key2 = $mediator->attach($resource2);
         $resultCollection1 = $mediator->getResourceCollection();
         $mediator->detach($key2);
@@ -73,6 +72,7 @@ class ResourceMediatorTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $region = 'foo';
         $environment = 'bar';
+        $environmentCollection = new EnvironmentCollection(array($environment));
         $resource = Mockery::mock('Sandhje\Spanner\Resource\LocalFilesystemResource');
         $resource->shouldReceive('tryLoad')->with([], $region)->andReturn(true)->once();
         $resource->shouldReceive('tryLoad')->with([], $region, array($environment))->andReturn(true)->once();
@@ -80,7 +80,7 @@ class ResourceMediatorTest extends \PHPUnit_Framework_TestCase
         $mediator->attach($resource);
     
         // Act
-        $mediator->load('foo', $environment);
+        $mediator->load('foo', $environmentCollection);
     
         // Assert
         // Intensionally empty, test fails if resource load is not called as expected
@@ -91,16 +91,28 @@ class ResourceMediatorTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $region = 'foo';
         $environment = array('bar1', 'bar2', 'bar3');
+        $environmentCollectionIterator = array(
+            ["bar1"],
+            ["bar2"],
+            ["bar1", "bar2"],
+            ["bar3"],
+            ["bar1", "bar3"],
+            ["bar1", "bar2", "bar3"],
+        );
+        $environmentCollection = new EnvironmentCollection($environment);
         $resource = Mockery::mock('Sandhje\Spanner\Resource\LocalFilesystemResource');
         $resource->shouldReceive('tryLoad')->with([], $region)->andReturn(true)->once();
-        $resource->shouldReceive('tryLoad')->with([], $region, array_slice($environment, 0, 1))->andReturn(true)->once();
-        $resource->shouldReceive('tryLoad')->with([], $region, array_slice($environment, 0, 2))->andReturn(true)->once();
-        $resource->shouldReceive('tryLoad')->with([], $region, array_slice($environment, 0, 3))->andReturn(true)->once();
+        $resource->shouldReceive('tryLoad')->with([], $region, $environmentCollectionIterator[0])->andReturn(true)->once();
+        $resource->shouldReceive('tryLoad')->with([], $region, $environmentCollectionIterator[1])->andReturn(true)->once();
+        $resource->shouldReceive('tryLoad')->with([], $region, $environmentCollectionIterator[2])->andReturn(true)->once();
+        $resource->shouldReceive('tryLoad')->with([], $region, $environmentCollectionIterator[3])->andReturn(true)->once();
+        $resource->shouldReceive('tryLoad')->with([], $region, $environmentCollectionIterator[4])->andReturn(true)->once();
+        $resource->shouldReceive('tryLoad')->with([], $region, $environmentCollectionIterator[5])->andReturn(true)->once();
         $mediator = new ResourceMediator();
         $mediator->attach($resource);
     
         // Act
-        $mediator->load('foo', $environment);
+        $mediator->load('foo', $environmentCollection);
     
         // Assert
         // Intensionally empty, test fails if resource load is not called as expected

@@ -148,11 +148,18 @@ class LocalFilesystemResource implements ResourceInterface
      */
     public function load($item, $environment = false)
     {
-        $content = $this->getState()->loadFile(
-            $this->getResource(), 
-            $this->getStrategy()->getFilename($item), 
-            $environment
-        );
+        $content = false;
+        foreach($this->getStrategy()->getFilename($item) as $filename) {
+            $content = $this->getState()->loadFile(
+                $this->getResource(), 
+                $filename, 
+                $environment
+            );
+            
+            if(!empty($content)) {
+                break;
+            }
+        }
 
         return $this->strategy->translate($content);
     }

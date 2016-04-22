@@ -4,6 +4,7 @@ namespace Sandhje\Spanner\Test\Resource;
 use Sandhje\Spanner\Resource\LocalFilesystemResource;
 use Mockery;
 use Sandhje\Spanner\Resource\Strategy\ArrayStrategy;
+use Sandhje\Spanner\Resource\Strategy\YamlStrategy;
 
 /**
  *
@@ -28,7 +29,7 @@ class LocalFilesystemResourceTest extends \PHPUnit_Framework_TestCase
         $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');
         $filesystemProxy->shouldReceive('is_readable')->with($resource)->andReturn(true);
         $resourceState = Mockery::mock('Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemStateInterface');
-        $resourceState->shouldReceive("loadFile")->with($resource, $file, $environment)->andReturn($fileContent);
+        $resourceState->shouldReceive("loadFile")->with($resource, $file[0], $environment)->andReturn($fileContent);
         
         // Act
         $localFilesystemResource = new LocalFilesystemResource($resource, new ArrayStrategy());
@@ -38,6 +39,32 @@ class LocalFilesystemResourceTest extends \PHPUnit_Framework_TestCase
         
         // Assert
         $this->assertEquals($fileContent, $result);
+    }
+    
+    public function testLoadFileTwoExtensions()
+    {
+        // Test LocalFilesystemResource lines 152 and 159
+        // Arrange
+        $resource = "/foo";
+        $region = "bar";
+        $file = [$region . ".yml", $region . ".yaml"];
+        $environment = "acme";
+        $fileContent = "a: b";
+        $resultFileContent = array("a" => "b");
+        $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');
+        $filesystemProxy->shouldReceive('is_readable')->with($resource)->andReturn(true);
+        $resourceState = Mockery::mock('Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemStateInterface');
+        $resourceState->shouldReceive("loadFile")->with($resource, $file[0], $environment)->andReturn(false);
+        $resourceState->shouldReceive("loadFile")->with($resource, $file[1], $environment)->andReturn($fileContent);
+        
+        // Act
+        $localFilesystemResource = new LocalFilesystemResource($resource, new YamlStrategy());
+        $localFilesystemResource->setFilesystemProxy($filesystemProxy);
+        $localFilesystemResource->setFileState($resourceState);
+        $result = $localFilesystemResource->load($region, $environment);
+        
+        // Assert
+        $this->assertEquals($resultFileContent, $result);
     }
     
     public function testUnreadableResource()
