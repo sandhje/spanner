@@ -19,7 +19,8 @@ class EnvironmentIterator implements \Iterator
     {
         $this->data = [];
         
-        for($segment = 0; $segment < count($data); $segment++) {
+        $dataCount = count($data);
+        for($segment = 0; $segment < $dataCount; $segment++) {
             for($cycle = 0; $cycle <= $segment; $cycle++) {
                 $cycleData = array_filter(array_flip($data), function($value) use ($segment, $cycle) {
                     if($segment == $value) return true; // Include the segment itself
