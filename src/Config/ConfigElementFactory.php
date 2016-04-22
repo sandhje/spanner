@@ -25,5 +25,3 @@ class ConfigElementFactory
         return new ConfigItem($region, $name, $element);
     }
 }
-
-?>

@@ -81,5 +81,3 @@ class ConfigItem extends ConfigElement
     }
  
 }
-
-?>

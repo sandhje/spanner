@@ -63,5 +63,3 @@ class ResourceCollection implements \IteratorAggregate
         return $data;
     }
 }
-
-?>

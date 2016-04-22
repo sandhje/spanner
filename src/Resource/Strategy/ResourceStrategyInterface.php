@@ -16,5 +16,3 @@ interface ResourceStrategyInterface
      */
     public function translate($content); 
 }
-
-?>

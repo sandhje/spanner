@@ -70,5 +70,3 @@ class ConfigIterator extends ConfigElement implements \Iterator
         return !is_null(key($this->data));
     }
 }
-
-?>

@@ -21,7 +21,7 @@ class FilesystemProxy
      * 
      * @param string $filename
      */
-    public function is_file($filename) 
+    public function isFile($filename) 
     {
         return is_file($filename);
     }
@@ -31,7 +31,7 @@ class FilesystemProxy
      *
      * @param string $dir
      */
-    public function is_dir($directory)
+    public function isDir($directory)
     {
         return is_dir($directory);
     }
@@ -42,7 +42,7 @@ class FilesystemProxy
      * @param string $filename
      * @return boolean
      */
-    public function is_readable($filename) 
+    public function isReadable($filename) 
     {
         return is_readable($filename);
     }
@@ -77,5 +77,3 @@ class FilesystemProxy
         
     }
 }
-
-?>

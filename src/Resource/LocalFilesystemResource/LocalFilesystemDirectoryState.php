@@ -36,5 +36,3 @@ class LocalFilesystemDirectoryState extends LocalFilesystemBaseState implements 
         return $loadResult;
     }
 }
-
-?>

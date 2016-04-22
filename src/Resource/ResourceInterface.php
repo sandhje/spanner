@@ -36,5 +36,3 @@ interface ResourceInterface
      */
     public function tryLoad(&$result, $item, $environment = false);
 }
-
-?>

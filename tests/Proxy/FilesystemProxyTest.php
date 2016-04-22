@@ -5,7 +5,6 @@ use Sandhje\Spanner\Proxy\FilesystemProxy;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\vfsStreamDirectory;
-use org\bovigo\vfs\vfsStreamFile;
 
 /**
  *
@@ -20,76 +19,76 @@ class FilesystemProxyTest extends \PHPUnit_Framework_TestCase
         vfsStreamWrapper::setRoot(new vfsStreamDirectory('foo'));
     }
     
-    public function testPositiveIs_dir()
+    public function testPositiveIsDir()
     {
         // Arrange
         vfsStream::create(array("bar" => array()));
         
         // Act
         $filesystemProxy = new FilesystemProxy();
-        $result = $filesystemProxy->is_dir("vfs://foo/bar");        
+        $result = $filesystemProxy->isDir("vfs://foo/bar");        
         
         // Assert
         $this->assertTrue($result);
     }
     
-    public function testNegativeIs_dir()
+    public function testNegativeIsDir()
     {
         // Arrange
     
         // Act
         $filesystemProxy = new FilesystemProxy();
-        $result = $filesystemProxy->is_dir("vfs://foo/bar");
+        $result = $filesystemProxy->isDir("vfs://foo/bar");
     
         // Assert
         $this->assertFalse($result);
     }
     
-    public function testPositiveIs_file()
+    public function testPositiveIsFile()
     {
         // Arrange
         vfsStream::create(array("bar.php" => "foobar"));
         
         // Act
         $filesystemProxy = new FilesystemProxy();
-        $result = $filesystemProxy->is_file("vfs://foo/bar.php");        
+        $result = $filesystemProxy->isFile("vfs://foo/bar.php");        
         
         // Assert
         $this->assertTrue($result);
     }
     
-    public function testNagetiveIs_file()
+    public function testNagetiveIsFile()
     {
         // Arrange
     
         // Act
         $filesystemProxy = new FilesystemProxy();
-        $result = $filesystemProxy->is_file("vfs://foo/bar.php");
+        $result = $filesystemProxy->isFile("vfs://foo/bar.php");
     
         // Assert
         $this->assertFalse($result);
     }
     
-    public function testPositiveIs_readable()
+    public function testPositiveIsReadable()
     {
         // Arrange
         vfsStream::create(array("bar.php" => "foobar"));
         
         // Act
         $filesystemProxy = new FilesystemProxy();
-        $result = $filesystemProxy->is_readable("vfs://foo/bar.php");        
+        $result = $filesystemProxy->isReadable("vfs://foo/bar.php");        
         
         // Assert
         $this->assertTrue($result);
     }
     
-    public function testNegativeIs_readable()
+    public function testNegativeIsReadable()
     {
         // Arrange
     
         // Act
         $filesystemProxy = new FilesystemProxy();
-        $result = $filesystemProxy->is_readable("vfs://foo/bar.php");
+        $result = $filesystemProxy->isReadable("vfs://foo/bar.php");
     
         // Assert
         $this->assertFalse($result);

@@ -2,7 +2,6 @@
 
 namespace Sandhje\Spanner\Test\Resource\Strategy;
 
-use Sandhje\Spanner\Config;
 use Symfony\Component\Yaml\Yaml;
 use Sandhje\Spanner\Resource\Strategy\YamlStrategy;
 
@@ -41,17 +40,30 @@ YAML;
         // Intensionally empty, test fails if expected exception is not thrown
     }
     
+    public function testTranslateEmpty()
+    {
+        // Arrange
+        $testConfig = false;
+    
+        // Act
+        $yamlStrategy = new YamlStrategy();
+        $result = $yamlStrategy->translate($testConfig);
+    
+        // Assert
+        $this->assertEquals(array(), $result);
+    }
+    
     public function testGetFilename()
     {
         // Arrange
         $region = "bar";
-        $file = $region . ".yml";
+        $files = [$region . ".yml", $region . ".yaml"];
     
         // Act
         $ymlStrategy = new YamlStrategy();
         $result = $ymlStrategy->getFilename($region);
     
         // Assert
-        $this->assertEquals($file, $result);
+        $this->assertEquals($files, $result);
     }
 }

@@ -17,6 +17,9 @@ class IniStrategy implements ResourceStrategyInterface, FilesystemResourceStrate
      */
     public function translate($content)
     {
+        if(empty($content))
+            return array();
+        
         $content = parse_ini_string($content, true);
         
         if(!$content) { 
@@ -34,8 +37,6 @@ class IniStrategy implements ResourceStrategyInterface, FilesystemResourceStrate
      */
     public function getFilename($region)
     {
-        return $region . ".ini";
+        return array($region . ".ini");
     }
 }
-
-?>

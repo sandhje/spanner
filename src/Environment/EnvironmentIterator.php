@@ -1,28 +1,35 @@
 <?php
-namespace Sandhje\Spanner\Resource;
+namespace Sandhje\Spanner\Environment;
 
 /**
  *
  * @author Sandhje
  *        
  */
-class ResourceIterator implements \Iterator
+class EnvironmentIterator implements \Iterator
 {
     /**
      * Iterator source
-     * 
+     *
      * @var array
      */
     private $data;
-
+    
     public function __construct(array $data)
     {
-        foreach($data as $resource) {
-            if(!($resource instanceof ResourceInterface))
-                throw new \InvalidArgumentException('Argument 1 passed to ResourceIterator::__construct() must be an array of ResourceInterface');
-        }
+        $this->data = [];
         
-        $this->data = $data;
+        $dataCount = count($data);
+        for($segment = 0; $segment < $dataCount; $segment++) {
+            for($cycle = 0; $cycle <= $segment; $cycle++) {
+                $cycleData = array_filter(array_flip($data), function($value) use ($segment, $cycle) {
+                    if($segment == $value) return true; // Include the segment itself
+                    if($value < $cycle) return true; // Include higher level environments
+                    return false;
+                });
+                $this->data[] = array_values(array_intersect_key($data, array_flip($cycleData)));
+            };
+        }
     }
     
     /**
@@ -49,7 +56,7 @@ class ResourceIterator implements \Iterator
      */
     public function next()
     {
-        next($this->data);            
+        next($this->data);
     }
 
     /**
@@ -69,4 +76,5 @@ class ResourceIterator implements \Iterator
     {
         return !is_null(key($this->data));
     }
+
 }

@@ -5,6 +5,7 @@ use Sandhje\Spanner\Config\ConfigElementFactory;
 use Sandhje\Spanner\Resource\ResourceInterface;
 use Sandhje\Spanner\Resource\ResourceMediator;
 use Sandhje\Spanner\Resource\ResourceMediatorInterface;
+use Sandhje\Spanner\Environment\EnvironmentCollection;
 
 class Config
 {
@@ -83,14 +84,24 @@ class Config
     /**
      * Set the configuration environment
      * 
-     * @param string $environment
+     * @param mixed $environment
      * @throws \InvalidArgumentException
      * @return \Sandhje\Spanner\Config
      */
     public function setEnvironment($environment)
     {
-        if(!is_string($environment)) {
-            throw new \InvalidArgumentException("Environment has to be a string");
+        if(is_string($environment)) {
+            $environment = array($environment);
+        }
+        
+        if(!is_array($environment)) {
+            throw new \InvalidArgumentException("Environment has to be a string or array");
+        }
+        
+        foreach($environment as $segment) {
+            if(!is_string($segment)) {
+                throw new \InvalidArgumentException("The environment array should only contain strings");
+            }
         }
         
         $this->environment = $environment;
@@ -107,7 +118,10 @@ class Config
      */
     public function getEnvironment()
     {
-        return $this->environment;
+        if(empty($this->environment))
+            return null;
+        
+        return new EnvironmentCollection($this->environment);
     }
     
     /**
@@ -223,7 +237,7 @@ class Config
     {
         $regionKey = $region . "Config";
         
-        $configRegion = $this->getResourceMediator()->load($region, $this->environment);
+        $configRegion = $this->getResourceMediator()->load($region, $this->getEnvironment());
         
         if(!empty($configRegion)) {
             $this->regions[$regionKey] = $configRegion;

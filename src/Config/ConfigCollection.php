@@ -62,5 +62,3 @@ class ConfigCollection extends ConfigElement implements \IteratorAggregate
         return $data;
     }
 }
-
-?>

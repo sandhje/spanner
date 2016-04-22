@@ -91,7 +91,7 @@ class LocalFilesystemResource implements ResourceInterface
     public function getState()
     {
         if(!$this->state) {
-            if ($this->getFilesystemProxy()->is_file($this->resource)) {
+            if ($this->getFilesystemProxy()->isFile($this->resource)) {
                 $this->setFileState();
             } else {
                 $this->setDirectoryState();
@@ -135,7 +135,7 @@ class LocalFilesystemResource implements ResourceInterface
      */
     private function getResource()
     {
-        if(!$this->resource || !$this->getFilesystemProxy()->is_readable($this->resource)) {
+        if(!$this->resource || !$this->getFilesystemProxy()->isReadable($this->resource)) {
             throw new \Exception("Invalid resource");
         }
         
@@ -148,11 +148,18 @@ class LocalFilesystemResource implements ResourceInterface
      */
     public function load($item, $environment = false)
     {
-        $content = $this->getState()->loadFile(
-            $this->getResource(), 
-            $this->getStrategy()->getFilename($item), 
-            $environment
-        );
+        $content = false;
+        foreach($this->getStrategy()->getFilename($item) as $filename) {
+            $content = $this->getState()->loadFile(
+                $this->getResource(), 
+                $filename, 
+                $environment
+            );
+            
+            if(!empty($content)) {
+                break;
+            }
+        }
 
         return $this->strategy->translate($content);
     }
@@ -168,5 +175,3 @@ class LocalFilesystemResource implements ResourceInterface
         return (is_array($result) && count($result));
     }
 }
-
-?>

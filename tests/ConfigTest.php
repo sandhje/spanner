@@ -5,9 +5,9 @@ namespace Sandhje\Spanner\Test;
 use Sandhje\Spanner\Config;
 use Mockery;
 use Sandhje\Spanner\Config\ConfigCollection;
-use Sandhje\Spanner\Resource\ResourceCollection;
 use Sandhje\Spanner\Resource\LocalFilesystemResource;
 use Sandhje\Spanner\Resource\Strategy\ArrayStrategy;
+use Sandhje\Spanner\Environment\EnvironmentCollection;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
@@ -54,6 +54,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     {
         // Arrange
         $environment = "foo";
+        $environmentCollection = new EnvironmentCollection(array($environment));
         $config = new Config();
     
         // Act
@@ -61,7 +62,19 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $resultEnvironment = $config->getEnvironment();
     
         // Assert
-        $this->assertEquals($environment, $resultEnvironment);
+        $this->assertEquals($environmentCollection, $resultEnvironment);
+    }
+    
+    public function testGetEmptyEnvironment()
+    {
+        // Arrange
+        $config = new Config();
+        
+        // Act
+        $resultEnvironment = $config->getEnvironment();
+        
+        // Assert
+        $this->assertNull($resultEnvironment);
     }
     
     public function testGet()
