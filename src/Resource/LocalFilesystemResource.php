@@ -91,7 +91,7 @@ class LocalFilesystemResource implements ResourceInterface
     public function getState()
     {
         if(!$this->state) {
-            if ($this->getFilesystemProxy()->is_file($this->resource)) {
+            if ($this->getFilesystemProxy()->isFile($this->resource)) {
                 $this->setFileState();
             } else {
                 $this->setDirectoryState();
@@ -135,7 +135,7 @@ class LocalFilesystemResource implements ResourceInterface
      */
     private function getResource()
     {
-        if(!$this->resource || !$this->getFilesystemProxy()->is_readable($this->resource)) {
+        if(!$this->resource || !$this->getFilesystemProxy()->isReadable($this->resource)) {
             throw new \Exception("Invalid resource");
         }
         

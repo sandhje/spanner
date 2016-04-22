@@ -43,7 +43,7 @@ abstract class LocalFilesystemBaseState
      */
     protected function load($location)
     {
-        if($this->filesystemProxy->is_file($location) && $this->filesystemProxy->is_readable($location)) {
+        if($this->filesystemProxy->isFile($location) && $this->filesystemProxy->isReadable($location)) {
             return $this->filesystemProxy->load($location);
         }
     

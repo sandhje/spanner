@@ -24,8 +24,8 @@ class LocalFilesystemDirectoryStateTest extends \PHPUnit_Framework_TestCase
         $resourceFile = $resource . "/" . $file;
         $fileContent = array("a" => "b");
         $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');
-        $filesystemProxy->shouldReceive('is_file')->with($resourceFile)->andReturn(true);
-        $filesystemProxy->shouldReceive('is_readable')->with($resourceFile)->andReturn(true);
+        $filesystemProxy->shouldReceive('isFile')->with($resourceFile)->andReturn(true);
+        $filesystemProxy->shouldReceive('isReadable')->with($resourceFile)->andReturn(true);
         $filesystemProxy->shouldReceive('load')->with($resourceFile)->andReturn($fileContent);
         
         // Act
@@ -45,8 +45,8 @@ class LocalFilesystemDirectoryStateTest extends \PHPUnit_Framework_TestCase
         $environment = "acme";
         $environmentResource = "/foo/acme/bar.php";
         $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');
-        $filesystemProxy->shouldReceive('is_file')->with($environmentResource)->andReturn(true);
-        $filesystemProxy->shouldReceive('is_readable')->with($environmentResource)->andReturn(true);
+        $filesystemProxy->shouldReceive('isFile')->with($environmentResource)->andReturn(true);
+        $filesystemProxy->shouldReceive('isReadable')->with($environmentResource)->andReturn(true);
         $filesystemProxy->shouldReceive('load')->with($environmentResource)->andReturn($fileContent);
         
         // Act
@@ -64,8 +64,8 @@ class LocalFilesystemDirectoryStateTest extends \PHPUnit_Framework_TestCase
         $file = 'bar.php';
         $resourceFile = $resource . "/" . $file;
         $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');
-        $filesystemProxy->shouldReceive('is_file')->with($resourceFile)->andReturn(false);
-        $filesystemProxy->shouldNotReceive('is_readable');
+        $filesystemProxy->shouldReceive('isFile')->with($resourceFile)->andReturn(false);
+        $filesystemProxy->shouldNotReceive('isReadable');
         $filesystemProxy->shouldNotReceive('load');
         
         // Act
