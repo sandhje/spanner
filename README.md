@@ -70,7 +70,7 @@ code by calling the Config::set method, data set through this method overwrites
 both the default and environment specific configuration data.
 
 Spanner is designed to be extended, you can easily create your own resources and
-strateies to tailor the package to your needs.
+strategies to tailor the package to your needs.
 
 Basic usage example
 -------------------
@@ -105,7 +105,7 @@ This returns all the data in "database.yml" and merges that data with
 $item = $config->get("database", "host");
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This returns the item "host" in "database.yml" and overrides it with the item
+This returns the item "host" in "database.yml" and overwrites it with the item
 "host" in "local/database.yml" if available.
 
 #### Use the configuration data:
@@ -146,7 +146,7 @@ The config class can take on or more environments which are passed to the
 resource when loading configuration data. It’s up to the resource to map this
 environment to a specific file, database table, etc.
 
-When data is requested the resource will first receive a load requests from most
+When data is requested the resource will receive a load requests from most
 “general” (without environment) to most “specific” (the deepest environment).
 E.g. if you pass the environment “local” and request the data in the “database”
 region the resource will receive two requests:
@@ -156,7 +156,7 @@ region the resource will receive two requests:
 2.  Load region “database” from environment “local”.
 
 The result from the second request is merged with the result from the first,
-overriding any duplicate data in the general “database” region with that from
+overwriting any duplicate data in the general “database” region with that from
 the more specific local “database” region.
 
 if the general “database” region contains:
@@ -175,7 +175,7 @@ user: root
 pass: root
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The result when requesting the configuration data for the region class would be:
+The result when requesting the configuration data for the region "database" would be:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 driver: mysql
@@ -185,10 +185,10 @@ user: root
 pass: root
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Note how database got overridden by the value from the more specific
+Note how database got overwritten by the value from the more specific
 configuration in the environment “local”.
 
-### Layered configuration
+### Layered environment
 
 One can also setup a “layered” environment, e.g. to include language and locale 
 in the environment. You can set a layered environment by passing an
@@ -199,7 +199,7 @@ $config->setEnvironment(array("en", "US", "local"));
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This results in the following load operations from most “general” to most
-“specific”, with each operation mergin with, and overriding, the data of the
+“specific”, with each operation mergin with, and overwriting, the data of the
 previous ones:
 
 1.  Load region “database”.
@@ -248,14 +248,14 @@ $config->attachResource(new LocalFilesystemResource('/path/to/config'), new Yaml
 Any class implementing `Sandje\Spanner\Resource\ResourceInterface` can be
 passed. See 'creating your own resource' below for details.
 
-#### LocalFilesystemResource
+### LocalFilesystemResource
 
 The local filesystem resource serves stuff that is on your local filesystem to
 the config class. Upon construction of the LocalFilesystemResource object a path
 to the resource location has to be passed, this can be either a file or a
 directory.
 
-### Environments
+#### Environments
 
 If the LocalFilesystemResource is passed a directory a load operation without an
 environment will translate to loading the contents of `./{file}.{ext}` and if an
@@ -338,7 +338,7 @@ return array(
 );
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Note: This strategy doesnâ€™t actually translate the data, but just checks that
+Note: This strategy doesn't actually translate the data, but just checks that
 it has a valid structure (meaning an array) and returns it.
 
 ### IniStrategy
