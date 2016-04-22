@@ -1,6 +1,8 @@
 spanner
 =======
 
+[![codecov.io](https://codecov.io/github/sandhje/spanner/coverage.svg?branch=master)](https://codecov.io/github/sandhje/spanner?branch=master)
+
 A framework agnostic configuration package.
 
 Installation
@@ -34,6 +36,19 @@ Installation
 
 2.  Run `composer install`
 
+Requirements
+------------
+
+The following PHP versions are supported by this version.
+
+-   PHP 5.5
+
+-   PHP 5.6
+
+-   PHP 7
+
+-   HHVM
+
 Main concepts
 -------------
 
@@ -57,12 +72,13 @@ both the default and environment specific configuration data.
 Spanner is designed to be extended, you can easily create your own resources and
 strateies to tailor the package to your needs.
 
-### Basic usage example
+Basic usage example
+-------------------
 
 Given the configuration data is inside the folder "/path/to/config" and consists
 of a file called database.yml.
 
-1.  Setup the configuration class:
+#### Setup the configuration class:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 use Sandhje\Spanner\Config;
@@ -76,16 +92,143 @@ $config->setEnvironment("local")
     ->attachResource($resource);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1.  Load the data in the region 'database':
+#### Load the data in the region 'database':
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$config->get("database");
+$collection = $config->get("database");
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This returns the data in "database.yml" and merges that data with
+This returns all the data in "database.yml" and merges that data with
 "local/database.yml" if available.
 
-### Resources
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$item = $config->get("database", "host");
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This returns the item "host" in "database.yml" and overrides it with the item
+"host" in "local/database.yml" if available.
+
+#### Use the configuration data:
+
+`Config::get` returns either a ConfigCollection in case an entire region is
+loaded or a ConfigItem in case a single item is loaded.
+
+You can loop over the values in a ConfigCollection to get the ConfigItems inside
+it:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+foreach($collection->getIterator() as $item) { }
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Get one item in the ConfigCollection:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$item = $collection->get("host");
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Or export the collection to a array:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$array = $collection->toArray();
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+From the ConfigItem you can get the key and value:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$key = $item->getKey();
+$value = $item->getValue();
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Environments
+------------
+
+The config class can take on or more environments which are passed to the
+resource when loading configuration data. It’s up to the resource to map this
+environment to a specific file, database table, etc.
+
+When data is requested the resource will first receive a load requests from most
+“general” (without environment) to most “specific” (the deepest environment).
+E.g. if you pass the environment “local” and request the data in the “database”
+region the resource will receive two requests:
+
+1.  Load region “database”.
+
+2.  Load region “database” from environment “local”.
+
+The result from the second request is merged with the result from the first,
+overriding any duplicate data in the general “database” region with that from
+the more specific local “database” region.
+
+if the general “database” region contains:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+driver: mysql
+host: 127.0.0.1
+database: foobar
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+And the “database” in the environment “local” contains:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+database: foobar_dev
+user: root
+pass: root
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The result when requesting the configuration data for the region class would be:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+driver: mysql
+host: 127.0.0.1
+database: foobar_dev
+user: root
+pass: root
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Note how database got overridden by the value from the more specific
+configuration in the environment “local”.
+
+### Layered configuration
+
+One can also setup a “layered” environment, e.g. to include language and locale 
+in the environment. You can set a layered environment by passing an
+array to `Config::setEnvironment`.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$config->setEnvironment(array("en", "US", "local"));
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This results in the following load operations from most “general” to most
+“specific”, with each operation mergin with, and overriding, the data of the
+previous ones:
+
+1.  Load region “database”.
+
+2.  Load region “database” from environment “en”.
+
+3.  Load region “database” from environment “US”.
+
+4.  Load region “database” from environment “en/US”.
+
+5.  Load region “database” from environment “local”.
+
+6.  Load region “database” from environment “en/local”.
+
+7.  Load region “database” from environment “en/US/local”.
+
+Caching
+-------
+
+All data is cached so performance is kept optimal, which is especially important
+when using a layered environment with multiple resources.
+
+Each time the environment or resource get changed the cache is emptied, so it is
+best to set everything up all at once early in the request handling process.
+
+Note that `Config::set` does not clear the cache, rather values set through this method get merged with the data from the cache.
+
+Resources
+---------
 
 A resource can be anything that holds configuration data, like the local
 filesystem, a database, a remote filesystem, etc. Resources are environment
@@ -94,7 +237,7 @@ environment is setup in the Config class, the resource will search in the
 environment location and then in the default location. Currently Spanner comes
 with one type of resource: LocalFilesystemResource.
 
-#### Usage
+### Usage
 
 The config class provides the attachResource method to add resources.
 
@@ -110,14 +253,29 @@ passed. See 'creating your own resource' below for details.
 The local filesystem resource serves stuff that is on your local filesystem to
 the config class. Upon construction of the LocalFilesystemResource object a path
 to the resource location has to be passed, this can be either a file or a
-directory. If the LocalFilesystemResource is passed a directory the resource's
-load operation will look for the requested file in ./{environment}/{file}.{ext}
-and if not found in ./{file}.{ext}. If the LocalFilesystemResource is passed a
-file the resource's load operation will look for ./{file}.{environment}.{ext}
-and if not found ./{file}.{ext}. The file extension depends on the strategy
-used.
+directory.
 
-#### Creating your own resource
+### Environments
+
+If the LocalFilesystemResource is passed a directory a load operation without an
+environment will translate to loading the contents of `./{file}.{ext}` and if an
+environment is passed this will translate to `./{environment}/{file}.{ext}`.
+
+E.g. if the resource’s path is ‘path/to/config’ with a strategy of ‘Array’ and
+the region ‘database’ gets loaded while the environment is set to ‘local’ this
+translates to: `path/to/config/database.php` and
+`path/to/config/local/database.php`
+
+If the LocalFilesystemResource is passed a file a load operation without an
+environment will translate to loading the contents of `./{file}.{ext}` and if an
+environment is passed this will translate to `./{file}.{environment}.{ext}`.
+
+E.g. if the resource’s path is ‘path/to/config/database.php’ with a strategy of
+‘Array’ and the region ‘database’ gets loaded while the environment is set to
+‘local’ this translates to: `path/to/config/database.php` and
+`path/to/config/database.local.php`
+
+### Creating your own resource
 
 If the inner workings of LocalFilesystemResource do not suit your needs you can
 easily create your own resource by creating a class that implements
@@ -137,7 +295,8 @@ methods:
     receives an array by reference as its first parameter. The result of the
     load method should be assigned to this array.
 
-### Strategies
+Strategies
+----------
 
 The strategy is responsible for translating the loaded data from the resource to
 a multidimensional associative array. Spanner ships with the following
@@ -153,7 +312,7 @@ strategies:
 
 -   YamlStrategy
 
-#### Usage
+### Usage
 
 Set the strategy upon instantion of the resource class:
 
@@ -161,7 +320,7 @@ Set the strategy upon instantion of the resource class:
 $resource = new LocalFilesystemResource('resource', new YamlStrategy());
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#### ArrayStrategy
+### ArrayStrategy
 
 The array strategy transates .php files from your resource. These files need to
 return a single (optionally multidimensional) array. e.g.:
@@ -179,10 +338,10 @@ return array(
 );
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Note: This strategy doesn’t actually translate the data, but just checks that it
-has a valid structure (meaning an array) and returns it.
+Note: This strategy doesnâ€™t actually translate the data, but just checks that
+it has a valid structure (meaning an array) and returns it.
 
-#### IniStrategy
+### IniStrategy
 
 The ini strategy translates .ini files from your resources. These files need to
 be valid ini files. Sections are translated to a array. A valid ini
@@ -197,7 +356,7 @@ collation=utf8_general_ci
 prefix=
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#### JsonStrategy
+### JsonStrategy
 
 The json strategy translates .json files from your resources. These files need
 to be valid json files with one root object. A valid json configuration file
@@ -214,7 +373,7 @@ could look like this:
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#### XmlStrategy
+### XmlStrategy
 
 The xml strategy translates .xml files from your resources. These files need to
 be valid xml files. The element names will be mapped to array keys and the
@@ -235,7 +394,7 @@ this:
 </database>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#### YamlStrategy
+### YamlStrategy
 
 The yaml strategy translates .yml files from your resources. These files need to
 be valid yaml files. Symfony's Yaml package is used for loading and translating
@@ -251,7 +410,7 @@ collation: utf8_general_ci
 prefix:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#### Creating your own strategy
+### Creating your own strategy
 
 You can easily create your own stratgy by either extending one of the existing
 strategy classes that closely matches your needs or by implementing the
@@ -265,8 +424,6 @@ file to load including the correct extension.
 
 TODO
 ----
-
--   Add multidimensional environments, e.g. nl/local or en/local
 
 -   Add database resource and strategies
 
