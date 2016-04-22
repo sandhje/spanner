@@ -2,6 +2,17 @@ spanner
 =======
 
 [![codecov.io](https://codecov.io/github/sandhje/spanner/coverage.svg?branch=master)](https://codecov.io/github/sandhje/spanner?branch=master)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/4758d67e-71ae-43f5-a7b1-1a1b210a3901/mini.png)](https://insight.sensiolabs.com/projects/4758d67e-71ae-43f5-a7b1-1a1b210a3901)
+
+This package is compliant with [PSR-1], [PSR-2] and [PSR-4]. If you notice compliance oversights,
+please send a patch via pull request.
+
+[PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
+[PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
+[PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
+
+Description
+------------
 
 A framework agnostic configuration package.
 
@@ -432,8 +443,6 @@ TODO
 -   More thorough exception handling
 
 -   Complete documentation
-
--   Setup sensiolabs insights analyses
 
 -   Add to packagist
 
