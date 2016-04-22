@@ -1,5 +1,7 @@
 {
   "name" : "sandhje/spanner",
+  "description" : "A framework agnostic configuration package",
+  "license" : "MIT", 
   "require" : {
     "symfony/yaml" : "v3.0.3"
   },
