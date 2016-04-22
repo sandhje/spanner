@@ -39,5 +39,3 @@ class EnvironmentCollection implements \IteratorAggregate
         return $data;
     }
 }
-
-?>
