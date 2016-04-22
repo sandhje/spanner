@@ -29,8 +29,8 @@ abstract class LocalFilesystemBaseState
         $result = "";
         
         $argList = func_get_args();
-        for ($i = 0; $i < func_num_args(); $i++) {
-            $result = ($i == 0) ? $argList[$i] : rtrim($result, "/") . "/" . ltrim($argList[$i], "/");
+        foreach ($argList as $i => $arg) {
+            $result = ($i == 0) ? $arg : rtrim($result, "/") . "/" . ltrim($arg, "/");
         }
         
         return $result;
