@@ -12,6 +12,8 @@ v0.2.0-dev - 2016-04-22
 
 ### Fixed
 
+-	PSR compliance
+
 -   Exception thrown for empty region
 
 v0.1.0-dev - 2016-04-15
