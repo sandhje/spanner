@@ -40,5 +40,3 @@ class JsonStrategy implements ResourceStrategyInterface, FilesystemResourceStrat
         return array($region . ".json");
     }
 }
-
-?>

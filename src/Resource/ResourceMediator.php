@@ -107,5 +107,3 @@ class ResourceMediator implements ResourceMediatorInterface
         return $id;
     }
 }
-
-?>

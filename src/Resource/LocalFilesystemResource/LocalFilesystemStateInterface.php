@@ -18,5 +18,3 @@ interface LocalFilesystemStateInterface
      */
     public function loadFile($resource, $file, $environment = false);
 }
-
-?>

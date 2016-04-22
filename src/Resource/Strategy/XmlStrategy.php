@@ -54,5 +54,3 @@ class XmlStrategy implements ResourceStrategyInterface, FilesystemResourceStrate
         return array($region . ".xml");
     }
 }
-
-?>

@@ -175,5 +175,3 @@ class LocalFilesystemResource implements ResourceInterface
         return (is_array($result) && count($result));
     }
 }
-
-?>

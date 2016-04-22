@@ -39,5 +39,3 @@ class ArrayStrategy implements ResourceStrategyInterface, FilesystemResourceStra
         );
     }
 }
-
-?>

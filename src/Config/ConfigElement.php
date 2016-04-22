@@ -34,5 +34,3 @@ abstract class ConfigElement
         return $this->region;
     }
 }
-
-?>

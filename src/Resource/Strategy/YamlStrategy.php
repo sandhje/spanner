@@ -45,5 +45,3 @@ class YamlStrategy implements ResourceStrategyInterface, FilesystemResourceStrat
         );
     }
 }
-
-?>

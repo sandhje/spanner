@@ -16,5 +16,3 @@ interface FilesystemResourceStrategyInterface extends ResourceStrategyInterface
      */
     public function getFilename($region); 
 }
-
-?>

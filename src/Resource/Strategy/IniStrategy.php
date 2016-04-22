@@ -40,5 +40,3 @@ class IniStrategy implements ResourceStrategyInterface, FilesystemResourceStrate
         return array($region . ".ini");
     }
 }
-
-?>

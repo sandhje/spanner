@@ -40,5 +40,3 @@ interface ResourceMediatorInterface
      */
     public function merge();
 }
-
-?>
