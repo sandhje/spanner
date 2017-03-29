@@ -1,7 +1,7 @@
 <?php
-namespace Sandhje\Spanner\Config;
+namespace OpenSourcerers\Spanner\Config;
 
-use Sandhje\Spanner\Config\ConfigElementFactory;
+use OpenSourcerers\Spanner\Config\ConfigElementFactory;
 
 /**
  *

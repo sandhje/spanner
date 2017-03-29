@@ -1,9 +1,9 @@
 <?php
 
-namespace Sandhje\Spanner\Test\Resource\Strategy;
+namespace OpenSourcerers\Spanner\Test\Resource\Strategy;
 
 use Symfony\Component\Yaml\Yaml;
-use Sandhje\Spanner\Resource\Strategy\YamlStrategy;
+use OpenSourcerers\Spanner\Resource\Strategy\YamlStrategy;
 
 class YmlStrategyTest extends \PHPUnit_Framework_TestCase
 {   

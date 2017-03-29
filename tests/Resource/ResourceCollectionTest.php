@@ -1,10 +1,10 @@
 <?php
-namespace Sandhje\Spanner\Test\Resource;
+namespace OpenSourcerers\Spanner\Test\Resource;
 
-use Sandhje\Spanner\Resource\LocalFilesystemResource;
-use Sandhje\Spanner\Resource\ResourceCollection;
+use OpenSourcerers\Spanner\Resource\LocalFilesystemResource;
+use OpenSourcerers\Spanner\Resource\ResourceCollection;
 use Mockery;
-use Sandhje\Spanner\Resource\Strategy\ArrayStrategy;
+use OpenSourcerers\Spanner\Resource\Strategy\ArrayStrategy;
 
 /**
  *
@@ -69,7 +69,7 @@ class ResourceCollectionTest extends \PHPUnit_Framework_TestCase
         $iterator = $resourceCollection->getIterator();
         
         // Assert
-        $this->assertInstanceOf('Sandhje\Spanner\Resource\ResourceIterator', $iterator);
+        $this->assertInstanceOf('OpenSourcerers\Spanner\Resource\ResourceIterator', $iterator);
     }
 }
 

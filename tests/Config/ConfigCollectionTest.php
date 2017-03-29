@@ -1,9 +1,9 @@
 <?php
-namespace Sandhje\Spanner\Test\Config;
+namespace OpenSourcerers\Spanner\Test\Config;
 
-use Sandhje\Spanner\Config\ConfigCollection;
-use Sandhje\Spanner\Config\ConfigItem;
-use Sandhje\Spanner\Config\ConfigIterator;
+use OpenSourcerers\Spanner\Config\ConfigCollection;
+use OpenSourcerers\Spanner\Config\ConfigItem;
+use OpenSourcerers\Spanner\Config\ConfigIterator;
 /**
  *
  * @author Sandhje
@@ -65,7 +65,7 @@ class ConfigCollectionTest extends \PHPUnit_Framework_TestCase
         $iterator = $configCollection->getIterator();
         
         // Assert
-        $this->assertInstanceOf('Sandhje\Spanner\Config\ConfigIterator', $iterator);
+        $this->assertInstanceOf('OpenSourcerers\Spanner\Config\ConfigIterator', $iterator);
     }
 }
 

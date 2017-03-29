@@ -1,7 +1,7 @@
 <?php
-namespace Sandhje\Spanner\Test\Config;
+namespace OpenSourcerers\Spanner\Test\Config;
 
-use Sandhje\Spanner\Config\ConfigElement;
+use OpenSourcerers\Spanner\Config\ConfigElement;
 /**
  *
  * @author Sandhje

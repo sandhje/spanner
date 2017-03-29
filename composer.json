@@ -1,5 +1,5 @@
 {
-  "name" : "sandhje/spanner",
+  "name" : "open-sourcerers/spanner",
   "description" : "A framework agnostic configuration package",
   "license" : "MIT", 
   "require" : {
@@ -16,12 +16,12 @@
   },
   "autoload-dev" : {
     "psr-4" : {
-      "Sandhje\\Spanner\\Test\\" : "tests"
+      "OpenSourcerers\\Spanner\\Test\\" : "tests"
     }
   },
   "autoload" : {
     "psr-4" : {
-      "Sandhje\\Spanner\\" : "src"
+      "OpenSourcerers\\Spanner\\" : "src"
     }
   }
 }

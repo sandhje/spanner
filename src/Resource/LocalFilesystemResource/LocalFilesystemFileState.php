@@ -1,5 +1,5 @@
 <?php
-namespace Sandhje\Spanner\Resource\LocalFilesystemResource;
+namespace OpenSourcerers\Spanner\Resource\LocalFilesystemResource;
 
 /**
  *
@@ -11,7 +11,7 @@ class LocalFilesystemFileState extends LocalFilesystemBaseState implements Local
     /**
      * (non-PHPdoc)
      *
-     * @see \Sandhje\Spanner\Resource\Strategy\LocalFilesystemStateInterface::loadFile()
+     * @see \OpenSourcerers\Spanner\Resource\Strategy\LocalFilesystemStateInterface::loadFile()
      *
      */
     public function loadFile($resource, $file, $environment = false)

@@ -1,7 +1,7 @@
 <?php
-namespace Sandhje\Spanner\Resource;
+namespace OpenSourcerers\Spanner\Resource;
 
-use Sandhje\Spanner\Resource\ResourceMediatorInterface;
+use OpenSourcerers\Spanner\Resource\ResourceMediatorInterface;
 /**
  *
  * @author Sandhje
@@ -23,7 +23,7 @@ class ResourceMediator implements ResourceMediatorInterface
     
     /**
      * {@inheritDoc}
-     * @see \Sandhje\Spanner\Resource\ResourceMediatorInterface::attach()
+     * @see \OpenSourcerers\Spanner\Resource\ResourceMediatorInterface::attach()
      */
     public function attach(ResourceInterface $resource)
     {
@@ -36,7 +36,7 @@ class ResourceMediator implements ResourceMediatorInterface
 
     /**
      * {@inheritDoc}
-     * @see \Sandhje\Spanner\Resource\ResourceMediatorInterface::detach()
+     * @see \OpenSourcerers\Spanner\Resource\ResourceMediatorInterface::detach()
      */
     public function detach($identifier)
     {
@@ -46,7 +46,7 @@ class ResourceMediator implements ResourceMediatorInterface
 
     /**
      * {@inheritDoc}
-     * @see \Sandhje\Spanner\Resource\ResourceMediatorInterface::load()
+     * @see \OpenSourcerers\Spanner\Resource\ResourceMediatorInterface::load()
      */
     public function load($region, $environmentCollection = null)
     {
@@ -78,7 +78,7 @@ class ResourceMediator implements ResourceMediatorInterface
 
     /**
      * {@inheritDoc}
-     * @see \Sandhje\Spanner\Resource\ResourceMediatorInterface::merge()
+     * @see \OpenSourcerers\Spanner\Resource\ResourceMediatorInterface::merge()
      */
     public function merge()
     {

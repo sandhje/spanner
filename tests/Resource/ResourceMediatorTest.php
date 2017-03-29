@@ -1,11 +1,11 @@
 <?php
 namespace Resource;
 
-use Sandhje\Spanner\Resource\ResourceMediator;
-use Sandhje\Spanner\Resource\LocalFilesystemResource;
-use Sandhje\Spanner\Resource\Strategy\ArrayStrategy;
+use OpenSourcerers\Spanner\Resource\ResourceMediator;
+use OpenSourcerers\Spanner\Resource\LocalFilesystemResource;
+use OpenSourcerers\Spanner\Resource\Strategy\ArrayStrategy;
 use Mockery;
-use Sandhje\Spanner\Environment\EnvironmentCollection;
+use OpenSourcerers\Spanner\Environment\EnvironmentCollection;
 /**
  *
  * @author Sandhje
@@ -55,7 +55,7 @@ class ResourceMediatorTest extends \PHPUnit_Framework_TestCase
     {
         // Arrange
         $region = 'foo';
-        $resource = Mockery::mock('Sandhje\Spanner\Resource\LocalFilesystemResource');
+        $resource = Mockery::mock('OpenSourcerers\Spanner\Resource\LocalFilesystemResource');
         $resource->shouldReceive('tryLoad')->with([], $region)->andReturn(true)->once();
         $mediator = new ResourceMediator();
         $mediator->attach($resource);
@@ -73,7 +73,7 @@ class ResourceMediatorTest extends \PHPUnit_Framework_TestCase
         $region = 'foo';
         $environment = 'bar';
         $environmentCollection = new EnvironmentCollection(array($environment));
-        $resource = Mockery::mock('Sandhje\Spanner\Resource\LocalFilesystemResource');
+        $resource = Mockery::mock('OpenSourcerers\Spanner\Resource\LocalFilesystemResource');
         $resource->shouldReceive('tryLoad')->with([], $region)->andReturn(true)->once();
         $resource->shouldReceive('tryLoad')->with([], $region, array($environment))->andReturn(true)->once();
         $mediator = new ResourceMediator();
@@ -100,7 +100,7 @@ class ResourceMediatorTest extends \PHPUnit_Framework_TestCase
             ["bar1", "bar2", "bar3"],
         );
         $environmentCollection = new EnvironmentCollection($environment);
-        $resource = Mockery::mock('Sandhje\Spanner\Resource\LocalFilesystemResource');
+        $resource = Mockery::mock('OpenSourcerers\Spanner\Resource\LocalFilesystemResource');
         $resource->shouldReceive('tryLoad')->with([], $region)->andReturn(true)->once();
         $resource->shouldReceive('tryLoad')->with([], $region, $environmentCollectionIterator[0])->andReturn(true)->once();
         $resource->shouldReceive('tryLoad')->with([], $region, $environmentCollectionIterator[1])->andReturn(true)->once();

@@ -1,7 +1,7 @@
 <?php
-namespace Sandhje\Spanner\Resource;
+namespace OpenSourcerers\Spanner\Resource;
 
-use Sandhje\Spanner\Resource\Strategy\ResourceStrategyInterface;
+use OpenSourcerers\Spanner\Resource\Strategy\ResourceStrategyInterface;
 /**
  *
  * @author Sandhje

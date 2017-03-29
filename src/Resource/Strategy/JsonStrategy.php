@@ -1,5 +1,5 @@
 <?php
-namespace Sandhje\Spanner\Resource\Strategy;
+namespace OpenSourcerers\Spanner\Resource\Strategy;
 
 /**
  *

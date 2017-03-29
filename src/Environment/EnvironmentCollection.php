@@ -1,5 +1,5 @@
 <?php
-namespace Sandhje\Spanner\Environment;
+namespace OpenSourcerers\Spanner\Environment;
 
 /**
  *

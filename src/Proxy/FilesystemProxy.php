@@ -1,5 +1,5 @@
 <?php
-namespace Sandhje\Spanner\Proxy;
+namespace OpenSourcerers\Spanner\Proxy;
 
 /**
  * Filesystem proxy

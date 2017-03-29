@@ -1,7 +1,7 @@
 <?php
-namespace Sandhje\Spanner\Resource\LocalFilesystemResource;
+namespace OpenSourcerers\Spanner\Resource\LocalFilesystemResource;
 
-use Sandhje\Spanner\Proxy\FilesystemProxy;
+use OpenSourcerers\Spanner\Proxy\FilesystemProxy;
 /**
  *
  * @author Sandhje

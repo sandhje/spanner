@@ -1,8 +1,8 @@
 <?php
-namespace Sandhje\Spanner\Test\Resource\LocalFilesystemResource;
+namespace OpenSourcerers\Spanner\Test\Resource\LocalFilesystemResource;
 
 use Mockery;
-use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemFileState;
+use OpenSourcerers\Spanner\Resource\LocalFilesystemResource\LocalFilesystemFileState;
 
 /**
  *
@@ -28,7 +28,7 @@ class LocalFilesystemFileStateTest extends \PHPUnit_Framework_TestCase
         );
         $file = 'bar.php';
         $fileContent = array("a" => "b");
-        $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');
+        $filesystemProxy = Mockery::mock('OpenSourcerers\Spanner\Proxy\FilesystemProxy');
         $filesystemProxy->shouldReceive('pathinfo')->with($resource)->andReturn($resourcePathInfo);
         $filesystemProxy->shouldReceive('isFile')->with($resource)->andReturn(true);
         $filesystemProxy->shouldReceive('isReadable')->with($resource)->andReturn(true);
@@ -56,7 +56,7 @@ class LocalFilesystemFileStateTest extends \PHPUnit_Framework_TestCase
         $fileContent = array("a" => "b");
         $environment = "acme";
         $environmentResource = "/foo/bar.acme.php";
-        $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');
+        $filesystemProxy = Mockery::mock('OpenSourcerers\Spanner\Proxy\FilesystemProxy');
         $filesystemProxy->shouldReceive('pathinfo')->with($resource)->andReturn($resourcePathInfo);
         $filesystemProxy->shouldReceive('isFile')->with($environmentResource)->andReturn(true);
         $filesystemProxy->shouldReceive('isReadable')->with($environmentResource)->andReturn(true);
@@ -81,7 +81,7 @@ class LocalFilesystemFileStateTest extends \PHPUnit_Framework_TestCase
             'filename' => 'bar'
         );
         $file = 'foo.php';
-        $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');
+        $filesystemProxy = Mockery::mock('OpenSourcerers\Spanner\Proxy\FilesystemProxy');
         $filesystemProxy->shouldReceive('pathinfo')->with($resource)->andReturn($resourcePathInfo);
         $filesystemProxy->shouldNotReceive('isFile');
         $filesystemProxy->shouldNotReceive('isReadable');

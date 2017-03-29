@@ -1,5 +1,5 @@
 <?php
-namespace Sandhje\Spanner\Resource\LocalFilesystemResource;
+namespace OpenSourcerers\Spanner\Resource\LocalFilesystemResource;
 
 /**
  *

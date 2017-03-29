@@ -1,11 +1,11 @@
 <?php
-namespace Sandhje\Spanner;
+namespace OpenSourcerers\Spanner;
 
-use Sandhje\Spanner\Config\ConfigElementFactory;
-use Sandhje\Spanner\Resource\ResourceInterface;
-use Sandhje\Spanner\Resource\ResourceMediator;
-use Sandhje\Spanner\Resource\ResourceMediatorInterface;
-use Sandhje\Spanner\Environment\EnvironmentCollection;
+use OpenSourcerers\Spanner\Config\ConfigElementFactory;
+use OpenSourcerers\Spanner\Resource\ResourceInterface;
+use OpenSourcerers\Spanner\Resource\ResourceMediator;
+use OpenSourcerers\Spanner\Resource\ResourceMediatorInterface;
+use OpenSourcerers\Spanner\Environment\EnvironmentCollection;
 
 class Config
 {
@@ -57,7 +57,7 @@ class Config
      * Attach a resource to the configuration resources mediator
      * 
      * @param ResourceInterface $resource
-     * @return int|\Sandhje\Spanner\Config
+     * @return int|\OpenSourcerers\Spanner\Config
      */
     public function attachResource(ResourceInterface $resource, $returnIdentifier = false)
     {
@@ -72,7 +72,7 @@ class Config
      * Detach a resource from the configuration resources mediator
      * 
      * @param string $identifier
-     * @return \Sandhje\Spanner\Config
+     * @return \OpenSourcerers\Spanner\Config
      */
     public function detachResource($identifier)
     {
@@ -86,7 +86,7 @@ class Config
      * 
      * @param mixed $environment
      * @throws \InvalidArgumentException
-     * @return \Sandhje\Spanner\Config
+     * @return \OpenSourcerers\Spanner\Config
      */
     public function setEnvironment($environment)
     {
@@ -130,7 +130,7 @@ class Config
      * @param string $region
      * @param string $name
      * @throws \Exception
-     * @return \Sandhje\Spanner\Config\ConfigCollection|\Sandhje\Spanner\Config\ConfigItem
+     * @return \OpenSourcerers\Spanner\Config\ConfigCollection|\OpenSourcerers\Spanner\Config\ConfigItem
      */
     public function get($region, $name = null)
     {
@@ -164,7 +164,7 @@ class Config
      * @param string $region
      * @param string $name
      * @param mixed $value
-     * @return \Sandhje\Spanner\Config
+     * @return \OpenSourcerers\Spanner\Config
      */
     public function set($region, $name, $value)
     {

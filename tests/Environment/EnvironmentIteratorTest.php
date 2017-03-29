@@ -1,7 +1,7 @@
 <?php
 namespace Environment;
 
-use Sandhje\Spanner\Environment\EnvironmentIterator;
+use OpenSourcerers\Spanner\Environment\EnvironmentIterator;
 /**
  *
  * @author Sandhje

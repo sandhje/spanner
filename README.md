@@ -92,9 +92,9 @@ of a file called database.yml.
 #### Setup the configuration class:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-use Sandhje\Spanner\Config;
-use Sandhje\Spanner\Resource\LocalFilesystemResource;
-use Sandhje\Spanner\Resource\Strategy\YamlStrategy;
+use OpenSourcerers\Spanner\Config;
+use OpenSourcerers\Spanner\Resource\LocalFilesystemResource;
+use OpenSourcerers\Spanner\Resource\Strategy\YamlStrategy;
 
 $resource = new LocalFilesystemResource('/path/to/config', new YamlStrategy());
 
@@ -256,7 +256,7 @@ The config class provides the attachResource method to add resources.
 $config->attachResource(new LocalFilesystemResource('/path/to/config'), new YamlStrategy());
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Any class implementing `Sandje\Spanner\Resource\ResourceInterface` can be
+Any class implementing `OpenSourcerers\Spanner\Resource\ResourceInterface` can be
 passed. See 'creating your own resource' below for details.
 
 ### LocalFilesystemResource
@@ -290,11 +290,11 @@ E.g. if the resource’s path is ‘path/to/config/database.php’ with a strate
 
 If the inner workings of LocalFilesystemResource do not suit your needs you can
 easily create your own resource by creating a class that implements
-`\Sandhje\Spanner\Resource\ResourceInterface`. This interface consists of three
+`\OpenSourcerers\Spanner\Resource\ResourceInterface`. This interface consists of three
 methods:
 
 1.  A constructor which is passed the resource and a strategy (a class
-    implementing `Sandhje\Spanner\Resource\Strategy\ResourceStrategyInterface`).
+    implementing `OpenSourcerers\Spanner\Resource\Strategy\ResourceStrategyInterface`).
 
 2.  A load method which handles the loading of the data in the passed region and
     optionally environment. The environment passed can be a string or an array.
@@ -425,11 +425,11 @@ prefix:
 
 You can easily create your own stratgy by either extending one of the existing
 strategy classes that closely matches your needs or by implementing the
-`\Sandhje\Spanner\Resource\Strategy\ResourceStrategyinterface`.
+`\OpenSourcerers\Spanner\Resource\Strategy\ResourceStrategyinterface`.
 
 Additionally, to create a strategy to be used in the LocalFilesystemResource,
 you need to implement the
-`Sandhje\Spanner\Resource\Strategy\FilesystemResourceStrategyInterface`. This
+`OpenSourcerers\Spanner\Resource\Strategy\FilesystemResourceStrategyInterface`. This
 interface defines a getFilename method which is used by the resource to get the
 file to load including the correct extension.
 

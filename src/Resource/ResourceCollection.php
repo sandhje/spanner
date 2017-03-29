@@ -1,5 +1,5 @@
 <?php
-namespace Sandhje\Spanner\Resource;
+namespace OpenSourcerers\Spanner\Resource;
 
 use Doctrine\Instantiator\Exception\InvalidArgumentException;
 /**
