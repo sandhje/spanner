@@ -423,6 +423,4 @@ TODO
 
 -   Complete documentation
 
--   Add to packagist
-
 -   Finish this list ;)
