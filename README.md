@@ -1,6 +1,7 @@
 spanner
 =======
 
+[![Build Status](https://travis-ci.org/sandhje/spanner.svg?branch=master)](https://travis-ci.org/sandhje/spanner)
 [![codecov](https://codecov.io/gh/sandhje/spanner/branch/master/graph/badge.svg)](https://codecov.io/gh/sandhje/spanner)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/4758d67e-71ae-43f5-a7b1-1a1b210a3901/mini.png)](https://insight.sensiolabs.com/projects/4758d67e-71ae-43f5-a7b1-1a1b210a3901)
 
