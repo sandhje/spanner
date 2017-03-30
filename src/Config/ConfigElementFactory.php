@@ -1,5 +1,5 @@
 <?php
-namespace Sandhje\Spanner\Config;
+namespace OpenSourcerers\Spanner\Config;
 
 /**
  *
@@ -14,7 +14,7 @@ class ConfigElementFactory
      * @param string $element
      * @param string $region
      * @param string $name
-     * @return \Sandhje\Spanner\Config\ConfigCollection|\Sandhje\Spanner\Config\ConfigItem
+     * @return \OpenSourcerers\Spanner\Config\ConfigCollection|\OpenSourcerers\Spanner\Config\ConfigItem
      */
     public function __invoke($element, $region, $name = null)
     {

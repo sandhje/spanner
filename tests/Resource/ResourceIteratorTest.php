@@ -1,10 +1,10 @@
 <?php
-namespace Sandhje\Spanner\Test\Resource;
+namespace OpenSourcerers\Spanner\Test\Resource;
 
 use Mockery;
-use Sandhje\Spanner\Resource\LocalFilesystemResource;
-use Sandhje\Spanner\Resource\ResourceIterator;
-use Sandhje\Spanner\Resource\Strategy\ArrayStrategy;
+use OpenSourcerers\Spanner\Resource\LocalFilesystemResource;
+use OpenSourcerers\Spanner\Resource\ResourceIterator;
+use OpenSourcerers\Spanner\Resource\Strategy\ArrayStrategy;
 
 /**
  *

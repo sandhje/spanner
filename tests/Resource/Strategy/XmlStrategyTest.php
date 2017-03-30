@@ -1,9 +1,9 @@
 <?php
 
-namespace Sandhje\Spanner\Test\Resource\Strategy;
+namespace OpenSourcerers\Spanner\Test\Resource\Strategy;
 
-use Sandhje\Spanner\Config;
-use Sandhje\Spanner\Resource\Strategy\XmlStrategy;
+use OpenSourcerers\Spanner\Config;
+use OpenSourcerers\Spanner\Resource\Strategy\XmlStrategy;
 
 class XmlStrategyTest extends \PHPUnit_Framework_TestCase
 {

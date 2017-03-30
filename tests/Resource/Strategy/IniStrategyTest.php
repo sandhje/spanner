@@ -1,9 +1,9 @@
 <?php
 
-namespace Sandhje\Spanner\Test\Resource\Strategy;
+namespace OpenSourcerers\Spanner\Test\Resource\Strategy;
 
-use Sandhje\Spanner\Config;
-use Sandhje\Spanner\Resource\Strategy\IniStrategy;
+use OpenSourcerers\Spanner\Config;
+use OpenSourcerers\Spanner\Resource\Strategy\IniStrategy;
 
 class IniStrategyTest extends \PHPUnit_Framework_TestCase
 {

@@ -1,8 +1,8 @@
 <?php
-namespace Sandhje\Spanner\Test\Config;
+namespace OpenSourcerers\Spanner\Test\Config;
 
-use Sandhje\Spanner\Config\ConfigIterator;
-use Sandhje\Spanner\Config\ConfigItem;
+use OpenSourcerers\Spanner\Config\ConfigIterator;
+use OpenSourcerers\Spanner\Config\ConfigItem;
 /**
  *
  * @author Sandhje

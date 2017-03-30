@@ -1,8 +1,8 @@
 <?php
-namespace Sandhje\Spanner\Test\Resource\LocalFilesystemResource;
+namespace OpenSourcerers\Spanner\Test\Resource\LocalFilesystemResource;
 
 use Mockery;
-use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemDirectoryState;
+use OpenSourcerers\Spanner\Resource\LocalFilesystemResource\LocalFilesystemDirectoryState;
 
 /**
  *
@@ -23,7 +23,7 @@ class LocalFilesystemDirectoryStateTest extends \PHPUnit_Framework_TestCase
         $file = 'bar.php';
         $resourceFile = $resource . "/" . $file;
         $fileContent = array("a" => "b");
-        $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');
+        $filesystemProxy = Mockery::mock('OpenSourcerers\Spanner\Proxy\FilesystemProxy');
         $filesystemProxy->shouldReceive('isFile')->with($resourceFile)->andReturn(true);
         $filesystemProxy->shouldReceive('isReadable')->with($resourceFile)->andReturn(true);
         $filesystemProxy->shouldReceive('load')->with($resourceFile)->andReturn($fileContent);
@@ -44,7 +44,7 @@ class LocalFilesystemDirectoryStateTest extends \PHPUnit_Framework_TestCase
         $fileContent = array("a" => "b");
         $environment = "acme";
         $environmentResource = "/foo/acme/bar.php";
-        $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');
+        $filesystemProxy = Mockery::mock('OpenSourcerers\Spanner\Proxy\FilesystemProxy');
         $filesystemProxy->shouldReceive('isFile')->with($environmentResource)->andReturn(true);
         $filesystemProxy->shouldReceive('isReadable')->with($environmentResource)->andReturn(true);
         $filesystemProxy->shouldReceive('load')->with($environmentResource)->andReturn($fileContent);
@@ -63,7 +63,7 @@ class LocalFilesystemDirectoryStateTest extends \PHPUnit_Framework_TestCase
         $resource = '/foo';
         $file = 'bar.php';
         $resourceFile = $resource . "/" . $file;
-        $filesystemProxy = Mockery::mock('Sandhje\Spanner\Proxy\FilesystemProxy');
+        $filesystemProxy = Mockery::mock('OpenSourcerers\Spanner\Proxy\FilesystemProxy');
         $filesystemProxy->shouldReceive('isFile')->with($resourceFile)->andReturn(false);
         $filesystemProxy->shouldNotReceive('isReadable');
         $filesystemProxy->shouldNotReceive('load');

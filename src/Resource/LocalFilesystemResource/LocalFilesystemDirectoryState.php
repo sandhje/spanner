@@ -1,5 +1,5 @@
 <?php
-namespace Sandhje\Spanner\Resource\LocalFilesystemResource;
+namespace OpenSourcerers\Spanner\Resource\LocalFilesystemResource;
 
 /**
  *
@@ -10,7 +10,7 @@ class LocalFilesystemDirectoryState extends LocalFilesystemBaseState implements 
 {
     /**
      * {@inheritDoc}
-     * @see \Sandhje\Spanner\Resource\Strategy\LocalFilesystemStateInterface::loadFile()
+     * @see \OpenSourcerers\Spanner\Resource\Strategy\LocalFilesystemStateInterface::loadFile()
      */
     public function loadFile($resource, $file, $environment = false)
     {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Sandhje\Spanner\Test;
+namespace OpenSourcerers\Spanner\Test;
 
-use Sandhje\Spanner\Config;
+use OpenSourcerers\Spanner\Config;
 use Mockery;
-use Sandhje\Spanner\Config\ConfigCollection;
-use Sandhje\Spanner\Resource\LocalFilesystemResource;
-use Sandhje\Spanner\Resource\Strategy\ArrayStrategy;
-use Sandhje\Spanner\Environment\EnvironmentCollection;
+use OpenSourcerers\Spanner\Config\ConfigCollection;
+use OpenSourcerers\Spanner\Resource\LocalFilesystemResource;
+use OpenSourcerers\Spanner\Resource\Strategy\ArrayStrategy;
+use OpenSourcerers\Spanner\Environment\EnvironmentCollection;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +21,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $resource1 = new LocalFilesystemResource("foo/", new ArrayStrategy());
         $resource2 = new LocalFilesystemResource("bar/", new ArrayStrategy());
-        $mediator = Mockery::mock('Sandhje\Spanner\Resource\ResourceMediator');
+        $mediator = Mockery::mock('OpenSourcerers\Spanner\Resource\ResourceMediator');
         $mediator->shouldReceive('attach')->twice()->andReturn("1", "2");
         $config = new Config();
         $config->setResourceMediator($mediator);
@@ -38,7 +38,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function testDetachResource()
     {
         // Arrange
-        $mediator = Mockery::mock('Sandhje\Spanner\Resource\ResourceMediator');
+        $mediator = Mockery::mock('OpenSourcerers\Spanner\Resource\ResourceMediator');
         $mediator->shouldReceive('detach')->with("1")->once();        
         $config = new Config();
         $config->setResourceMediator($mediator);
@@ -82,7 +82,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $region = "acme";
         $regionArray = array("foo" => "bar");
-        $mediator = Mockery::mock('Sandhje\Spanner\Resource\ResourceMediator');
+        $mediator = Mockery::mock('OpenSourcerers\Spanner\Resource\ResourceMediator');
         $mediator->shouldReceive("load")->with($region, null)->andReturn($regionArray);
         $config = new Config();
         $config->setResourceMediator($mediator);
@@ -100,7 +100,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $region = "acme";
         $regionArray = array("foo" => "bar");
         $regionArray2 = array("foo" => "lorem");
-        $mediator = Mockery::mock('Sandhje\Spanner\Resource\ResourceMediator');
+        $mediator = Mockery::mock('OpenSourcerers\Spanner\Resource\ResourceMediator');
         $mediator->shouldReceive("load")->with($region, null)->andReturn($regionArray);
         $config = new Config();
         $config->setResourceMediator($mediator);
@@ -119,7 +119,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $region = "acme";
         $regionArray = array("foo" => "bar");
         $regionArray2 = array("foo" => "lorem");
-        $mediator = Mockery::mock('Sandhje\Spanner\Resource\ResourceMediator');
+        $mediator = Mockery::mock('OpenSourcerers\Spanner\Resource\ResourceMediator');
         $mediator->shouldReceive("attach");
         $mediator->shouldReceive("load")->with($region, null)->andReturn($regionArray);
         $config = new Config();

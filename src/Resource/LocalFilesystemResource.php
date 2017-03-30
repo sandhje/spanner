@@ -1,12 +1,12 @@
 <?php
-namespace Sandhje\Spanner\Resource;
+namespace OpenSourcerers\Spanner\Resource;
 
-use Sandhje\Spanner\Proxy\FilesystemProxy;
-use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemStateInterface;
-use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemFileState;
-use Sandhje\Spanner\Resource\LocalFilesystemResource\LocalFilesystemDirectoryState;
-use Sandhje\Spanner\Resource\Strategy\ResourceStrategyInterface;
-use Sandhje\Spanner\Resource\Strategy\FilesystemResourceStrategyInterface;
+use OpenSourcerers\Spanner\Proxy\FilesystemProxy;
+use OpenSourcerers\Spanner\Resource\LocalFilesystemResource\LocalFilesystemStateInterface;
+use OpenSourcerers\Spanner\Resource\LocalFilesystemResource\LocalFilesystemFileState;
+use OpenSourcerers\Spanner\Resource\LocalFilesystemResource\LocalFilesystemDirectoryState;
+use OpenSourcerers\Spanner\Resource\Strategy\ResourceStrategyInterface;
+use OpenSourcerers\Spanner\Resource\Strategy\FilesystemResourceStrategyInterface;
 
 /**
  *
@@ -62,7 +62,7 @@ class LocalFilesystemResource implements ResourceInterface
     }
 
     /**
-     * @param \Sandhje\Spanner\Resource\Strategy\FilesystemResourceStrategyInterface $strategy
+     * @param \OpenSourcerers\Spanner\Resource\Strategy\FilesystemResourceStrategyInterface $strategy
      */
     private function setStrategy(FilesystemResourceStrategyInterface $strategy)
     {
@@ -86,7 +86,7 @@ class LocalFilesystemResource implements ResourceInterface
     }
     
     /**
-     * @return \Sandhje\Spanner\Resource\LocalFilesystemResource\StateInterface
+     * @return \OpenSourcerers\Spanner\Resource\LocalFilesystemResource\StateInterface
      */
     public function getState()
     {
@@ -102,7 +102,7 @@ class LocalFilesystemResource implements ResourceInterface
     }
     
     /**
-     * @param \Sandhje\Spanner\Proxy\FilesystemProxy $filesystemProxy
+     * @param \OpenSourcerers\Spanner\Proxy\FilesystemProxy $filesystemProxy
      */
     public function setFilesystemProxy(FilesystemProxy $filesystemProxy = null)
     {
@@ -110,7 +110,7 @@ class LocalFilesystemResource implements ResourceInterface
     }
     
     /**
-     * @return \Sandhje\Spanner\Proxy\FilesystemProxy
+     * @return \OpenSourcerers\Spanner\Proxy\FilesystemProxy
      */
     public function getFilesystemProxy()
     {
@@ -144,7 +144,7 @@ class LocalFilesystemResource implements ResourceInterface
 
     /**
      * {@inheritDoc}
-     * @see \Sandhje\Spanner\Resource\ResourceInterface::load()
+     * @see \OpenSourcerers\Spanner\Resource\ResourceInterface::load()
      */
     public function load($item, $environment = false)
     {
@@ -166,7 +166,7 @@ class LocalFilesystemResource implements ResourceInterface
     
     /**
      * {@inheritDoc}
-     * @see \Sandhje\Spanner\Resource\ResourceInterface::tryLoad()
+     * @see \OpenSourcerers\Spanner\Resource\ResourceInterface::tryLoad()
      */
     public function tryLoad(&$result, $item, $environment = false)
     {

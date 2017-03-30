@@ -1,7 +1,7 @@
 <?php
-namespace Sandhje\Spanner\Resource;
+namespace OpenSourcerers\Spanner\Resource;
 
-use Sandhje\Spanner\Resource\ResourceInterface;
+use OpenSourcerers\Spanner\Resource\ResourceInterface;
 /**
  *
  * @author Sandhje

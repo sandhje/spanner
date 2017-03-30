@@ -1,9 +1,9 @@
 <?php
 
-namespace Sandhje\Spanner\Test\Resource\Strategy;
+namespace OpenSourcerers\Spanner\Test\Resource\Strategy;
 
-use Sandhje\Spanner\Config;
-use Sandhje\Spanner\Resource\Strategy\ArrayStrategy;
+use OpenSourcerers\Spanner\Config;
+use OpenSourcerers\Spanner\Resource\Strategy\ArrayStrategy;
 
 class ArrayStrategyTest extends \PHPUnit_Framework_TestCase
 {

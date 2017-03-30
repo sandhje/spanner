@@ -1,7 +1,7 @@
 <?php
-namespace Sandhje\Spanner\Test\Environment;
+namespace OpenSourcerers\Spanner\Test\Environment;
 
-use Sandhje\Spanner\Environment\EnvironmentCollection;
+use OpenSourcerers\Spanner\Environment\EnvironmentCollection;
 /**
  *
  * @author Sandhje
@@ -38,7 +38,7 @@ class EnvironmentCollectionTest extends \PHPUnit_Framework_TestCase
         $iterator = $environmentCollection->getIterator();
         
         // Assert
-        $this->assertInstanceOf('Sandhje\Spanner\Environment\EnvironmentIterator', $iterator);
+        $this->assertInstanceOf('OpenSourcerers\Spanner\Environment\EnvironmentIterator', $iterator);
     }
 }
 
