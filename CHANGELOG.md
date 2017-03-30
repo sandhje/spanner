@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v0.3.0-dev - 2017-03-30
+-----------------------
+
+### Changed
+
+-   Namespace
+
+-   Package dependencies
+
 v0.2.0-dev - 2016-04-22
 -----------------------
 
