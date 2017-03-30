@@ -19,33 +19,11 @@ A framework agnostic configuration package.
 Installation
 ------------
 
-1.  Add composer to your project, see https://getcomposer.org/
-
-2.  Add this github repository to the repositories element in your composer.json
-    and add the dev stability flag (Note: once stable this package will be
-    published on packagist and this step will no longer be necessary)
+Via Composer
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-"minimum-stability" : "dev",
-"prefer-stable": true,
-"repositories" : [ {
-    "type" : "composer",
-    "url" : "https://packagist.org/"
-}, {
-    "type": "vcs"
-    "url": "https://github.com/sandhje/spanner.git",
-} ]
+$ composer require open-sourcerers/spanner
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-1.  Add the package to the require element in your composer.json
-
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    "require" : {
-    "sandhje/spanner" : "*"
-    },
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-2.  Run `composer install`
 
 Requirements
 ------------
